@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 17:57:30 by cguiot            #+#    #+#             */
-/*   Updated: 2021/12/16 17:11:12 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 17:02:19 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,13 @@ char	*value(char *str)
 	u = 0;
 	i = 0;
 	dest = NULL;
+	while (str[u] && str[u] != '=')
+		u++;
+	if (str[u])
+		u++;
 	while (str[i])
 		i++;
-	while (str[u] != '=')
-		u++;
-	u++;
-	dest = malloc(sizeof(char) * i - u + 1);
+	dest = (char *)malloc(sizeof(char) * i - u + 1);
 	i = 0;
 	while (str[u])
 	{

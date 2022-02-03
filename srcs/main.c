@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2021/12/16 17:21:26 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 17:50:29 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,13 @@ int	is_closed(char *str)
 		return (1);
 	if (str[3] != 't')
 		return (1);
+	if (str[4] != '\0')
+		return (1);
 	else
+	{
+		dprintf(1, "exit\n");
 		return (0);	
-
+	}
 }
 
 void	aff(t_lst *data)
@@ -69,13 +73,11 @@ int	prompt(char **envr)
 	{
 		prt = readline("Minishell-4.2 $> ");
 		add_history(prt);
-		if (prt[0] == 'Q')
-			dprintf(1, "CA : %s\n", found_key(&data_env, "LALALA"));
+		//parsing
+		//
 	//	execve(, "ls", envr);
-	//	if (prt[0] == 'e' && prt[1] == 'x' && prt[2] == 'p')
-	//		aff_key(&data_env, prt + 4);
 		if (prt[0] == 'e' && prt[1] == 'n' && prt[2] == 'v')
-			env(&data_env);
+			env(&data_env, 0);
 			//	aff(&data_env);
 		if (prt[0] == 's' && prt[1] == 'h' && prt[2] == 'o')
 			dprintf(1, "%s\n", envr[9]);
@@ -98,11 +100,7 @@ int main(int ac, char **av, char **const envr)
 {
 	(void)ac;
 	(void)av;
-//	int a = 0;
 	int i = 0;
-//	char *prompt;
-	//	ft_putstr("lolilol\n");
-
 //	if (ac == 1)
 		prompt(envr); // = readline("lolilol :");
 	return (i);
