@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:50 by cguiot            #+#    #+#             */
-/*   Updated: 2021/12/16 16:47:32 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/04 15:03:26 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ typedef struct s_env
 	struct s_env	*next;
 
 }				t_env;
+
+typedef struct s_command
+{
+	char				*chunk;
+	char 				*command;
+	char				*instruction;
+	struct s_command	*next;
+}				t_command;
 
 typedef struct s_lst
 {
@@ -54,8 +62,9 @@ t_env	*get_key(t_lst *data, char *key);
 //builtinS
 //
 
-void	env(t_lst *data);
+void	env(t_lst *data, int ntm);
 void	unset(t_lst *data, char *key);
 void	expor(t_lst *data, char *path);
+void	cd(t_lst *data, char *path);
 
 #endif
