@@ -6,47 +6,66 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/03 17:50:22 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/09 20:12:03 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-char		*new_chunk(char *str)
+void	*nmalloc(void **var, int size)
 {
-	
+	*var = malloc(sizeof(char) * size);
+	if (!(*var))
+		return (NULL);
+	while (size--)
+		((char *)(*var))[size] = 0;
+	return (*var);
+}
+
+int	pre_pre_cut(t_cmd_lst *cmd_ctrl, char *line)
+{
+	int i;
+	int	j;
+	int	len;
+	t_command	*chunk;
+
+	chunk = create_chunk();
+	cmd_ctrl->first = chunk;
+	i = 0;
+	while (line[i])
+	{
+		if (!chunk)
+			return (0/*error(2, MEMALFAILED)*/);
+		len = 0;
+		while (line[i] && line[i++] != '|')
+			len++;
+		if (!nmalloc((void **)&(chunk->command), len + 1))
+			return (0/*error(2, MEMALFAILED)*/);
+		j = 0;
+		//while (len--)
+		//	chunk->command[j++] = line[i - len];
+		chunk = chunk->next;
+		if (line[i])
+			chunk = create_chunk();
+	}
+	return (1);
 }
 
 t_command	*parsing(char *line)
 {
-	int			i;
-	int			len;
-	t_command	*command;
-
-	i = 0;
-	command = (t_command *)malloc(sizeof(t_command));
-	if (line[i])
+	t_cmd_lst	*cmd_ctrl = 0;
+	t_command	*aff;
+	
+	if (!pre_pre_cut(cmd_ctrl, line))
+		return (0);
+	aff = cmd_ctrl->first;
+	while (aff)
 	{
-		if (line[i] == '\'')
-			command->chunk = get_quote_content(line + i);
-		else if (line[i] == '"')
-			command->chunk = get_dquote_content(line + i);
-		else if (line[i] == '|')
-			command->chunk = new_chunk("|");
-		else if (line[i] == '<')
-			command->chunk = new_chunk("<");
-		else if (line[i] == '>')
-			command->chunk = new_chunk(">");
-		else if (line[i] == '<' && line[i + 1] && line[i + 1] == '<')
-			command->chunk = new_chunk("<<");
-		else if (line[i] == '>' && line[i + 1] && line[i + 1] == '>')
-			command->chunk = new_chunk(">>");
-
+		dprintf(1, "%s\n", aff->command);
+		aff = aff->next;	
 	}
-	return (command);
+	return (0);
 }
-
-
 
 //chart 
 //

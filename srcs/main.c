@@ -6,12 +6,11 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/03 17:50:29 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/09 20:01:30 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 int	is_closed(char *str)
 {
@@ -73,12 +72,12 @@ int	prompt(char **envr)
 	{
 		prt = readline("Minishell-4.2 $> ");
 		add_history(prt);
-		//parsing
+		parsing(prt);
 		//
 	//	execve(, "ls", envr);
 		if (prt[0] == 'e' && prt[1] == 'n' && prt[2] == 'v')
-			env(&data_env, 0);
-			//	aff(&data_env);
+			//env(&data_env, 0);
+			aff(&data_env);
 		if (prt[0] == 's' && prt[1] == 'h' && prt[2] == 'o')
 			dprintf(1, "%s\n", envr[9]);
 		if (prt[0] == 'p' && prt[1] == 'w' && prt[2] == 'd')

@@ -3,6 +3,8 @@ NAME = Minishell
 SRCS =	main.c \
 		utils.c \
 		initlst.c \
+		parsing.c \
+		init_parsing_lst.c \
 		builtins.c
 
 SRCS_DIR	= srcs

@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:50 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/04 15:03:26 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/09 20:03:13 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# define MEMALFAILED "Error : Memory Allocation Failed\n"
+
 typedef struct s_env
 {
 	char			*key;
@@ -30,11 +32,22 @@ typedef struct s_env
 
 typedef struct s_command
 {
-	char				*chunk;
-	char 				*command;
-	char				*instruction;
+	char				*command;
+	char				**args;
+	int					piped;
+	int					redir_in;
+	int					redir_in_path;
+	int					redir_out;
+	int					redir_out_path;
 	struct s_command	*next;
 }				t_command;
+
+typedef struct s_cmd_lst
+{
+	t_command	*first;
+	t_command	*last;
+	int		size;
+}			t_cmd_lst;
 
 typedef struct s_lst
 {
@@ -66,5 +79,13 @@ void	env(t_lst *data, int ntm);
 void	unset(t_lst *data, char *key);
 void	expor(t_lst *data, char *path);
 void	cd(t_lst *data, char *path);
+
+//partsing
+//
+
+t_command	*parsing(char *line);
+
+//init parsing lst
+t_command	*create_chunk(void);
 
 #endif
