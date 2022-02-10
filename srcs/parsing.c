@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/10 18:05:16 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 18:07:22 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	pre_pre_cut(t_cmd_lst *cmd_ctrl, char *line)
 			len++;
 			i++;
 		}
-		new_elem_chunk(&(chunk->next), line, len, i);
+		get_cmd(&(chunk->next), line, len, i);
 		chunk = chunk->next;
 	//	dprintf(1, "test : %s$\n", chunk->command);
 		if (!chunk)
