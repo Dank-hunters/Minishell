@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:50 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/09 20:03:13 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 18:05:14 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,6 @@ t_command	*parsing(char *line);
 
 //init parsing lst
 t_command	*create_chunk(void);
-
+void		*get_cmd(t_command **chunk, char *line, int len, int i);
+void    	*nmalloc(void **var, int size);
 #endif

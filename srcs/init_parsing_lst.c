@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 18:45:14 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/09 19:50:28 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 18:05:18 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,21 @@ t_command	*create_chunk(void)
 	chunk->redir_out_path = 0;
 	chunk->next = 0;
 	return (chunk);
+}
+
+void	*get_cmd(t_command **chunk, char *line, int len, int i)
+{
+	int j;
+
+	j = 0;
+	*chunk = create_chunk();
+	if (!nmalloc((void **)&((*chunk)->command), len + 1))
+		return (0);//error(2, MEMALFAILED));
+	while (len)
+	{
+		(*chunk)->command[j] = line[i - len];
+		len--;
+		j++;
+	}
+	return (*chunk);
 }
