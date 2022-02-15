@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:50 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/14 21:02:52 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/15 17:53:38 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ char		*ft_strdup(char *s);
 char		*trim_spaces(char *str);
 
 // norm_alloc_utils
-void    	*nmalloc(void **var, int size);
+void	*nmalloc(void **var, int size);
 void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi);
+void	*dealloc(void **ptr, int starti, int endi);
 
 //initlst
 char *key(char *str);

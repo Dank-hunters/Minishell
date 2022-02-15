@@ -6,39 +6,42 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:20:58 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/14 21:12:01 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/15 19:23:20 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int	buildkey(t_lst *env, char *str, char **key)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && str[i] != ' ' && str[i] != '\n')
-		i++;
-	if (!nmalloc((void **)key, i + 1))
-		return (0);
-	i = 0;
-	while (str[i] && str[i] != ' ' && str[i] != '\n')
-	{
-		(*key)[i] = str[i];
-		i++;
-	}
-	*key = ft_strdup(get_value(env, *key));
-	if (!*key)
-		return (0);
-	return (i);
-}
 
 void	skipquotes(char *str, int *i, char quote)
 {
 	str[(*i)++] = '\n';
 	while (str[*i] && str[*i] != quote)
 		(*i)++;
-	str[(*i)++] = '\n';
+	if (str[*i])
+		str[(*i)++] = '\n';
+}
+
+int	buildkey(t_lst *env, char *str, char **key, int i)
+{
+	int	j;
+	int len;
+
+	len = i;
+	while (str[len] && str[len] != ' ' && str[len] != '\n')
+		len++;
+	if (!nmalloc((void **)key, len + 1))
+		return (0);
+	j = 0;
+	while (str[i] && str[i] != ' ' && str[i] != '\n')
+	{
+		(*key)[j] = str[i];
+		i++;
+		j++;
+	}
+	*key = ft_strdup(get_value(env, *key));
+	if (!*key)
+		return (0);
+	return (j);
 }
 
 int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
@@ -48,22 +51,24 @@ int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
 	char	*key;
 
 	j = *i;
-	while (nstr[j] && nstr[j] != ' ' && nstr[j] != '\n')
+	while (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
 	{
-		if (nstr[*i] == '"')
-			skipquotes(nstr, i, '"');
-		if (nstr[j] == '$')
+		j = *i;
+		if (nstr[*i] == '"' && ((*i)++ + 1))
+			skipquotes(nstr, &j, '"');
+		if (nstr[*i] == '$')
 		{
-			keylen = buildkey(env, nstr, &key);
-		   	if (!keylen || !insalloc((void **)&nstr, key, j, j + keylen))
+			keylen = buildkey(env, nstr, &key, *i + 1);
+		   	if (!keylen || !insalloc((void **)&nstr, key, *i, *i + keylen + 1))
 				return (0);
-			while (nstr[j] && nstr[j] != ' ' && nstr[j] != '\n')
-				j++;
-			*i = j;
+			dprintf(1, "|%s|\n\n", nstr);
+			while (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
+				(*i)++;
+			*str = nstr;
 		}
-		j++;
+		if (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
+			(*i)++;
 	}
-	*str = nstr;
 	return (1);
 }
 
@@ -81,8 +86,16 @@ int	dollar_ptlc(t_lst *env, char **str)
 		if (sstr[i] && sstr[i] != '\'')
 			if (!dollar_replace(env, str, sstr, &i))
 				return (0);
-		i++;
+		if (sstr[i])
+			i++;
 	}
+/*	i = 0;
+	while (sstr[i])
+	{
+		if (sstr[i] == '\n' && !dealloc((void **)str, i, i + 1))
+			return (0);
+		i++;
+	}*/
 	return (1);
 }
 

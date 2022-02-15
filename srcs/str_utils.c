@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:40:26 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/14 21:13:21 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/15 18:41:34 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ int	ft_strlen(char *str)
 {
 	char	*sstr;
 
+	if (!str)
+		return (0);
 	sstr = str;
 	while (*str)
 		str++;
-	return (sstr - str);
+	return (str - sstr);
 }
 
 int	ft_strcmp(char *s1, char *s2)
@@ -71,10 +73,10 @@ char	*ft_strdup(char *s)
 	int		i;
 	char	*dest;
 
-	i = -1;
 	dest = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!dest)
+	if (!dest || !s)
 		return (NULL);
+	i = -1;
 	while (s[++i])
 		dest[i] = s[i];
 	dest[i] = 0;
