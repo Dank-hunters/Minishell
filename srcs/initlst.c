@@ -6,12 +6,11 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 17:57:30 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/09 20:01:42 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/14 16:49:46 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 char *key(char *str)
 {
@@ -22,7 +21,7 @@ char *key(char *str)
 	dest = NULL;
 	while (str[i] && str[i] != '=')
 		i++;
-	dest = malloc(sizeof(char) * i + 1);
+	dest = malloc(sizeof(char) * (i + 1)); ////securrriteeeeeeeee
 	i = 0;
 	while (str[i] &&  str[i] != '=')
 	{
@@ -48,7 +47,7 @@ char	*value(char *str)
 		u++;
 	while (str[i])
 		i++;
-	dest = (char *)malloc(sizeof(char) * i - u + 1);
+	dest = (char *)malloc(sizeof(char) * (i - u + 1));//secuuuuriteeeeeee
 	i = 0;
 	while (str[u])
 	{
@@ -60,12 +59,14 @@ char	*value(char *str)
 	return (dest);
 }
 
-t_lst	init_env_ctrl(char **envr)
+t_lst	*init_env_ctrl(char **envr)
 {
-	t_lst	lst;
+	t_lst	*lst;
 
-	lst.first = creat_elem(envr[0]);
-	lst.size = 1;
+	if (!nmalloc((void **)&lst, sizeof(t_lst)))
+		return (error(MEMALFAILED));
+	lst->first = create_env_elem(envr[0]);
+	lst->size = 1;
 	return (lst);
 }
 
@@ -79,23 +80,11 @@ void	init_env_lst(t_lst *lst, char **envr, int size)
 	current = lst->first;
 	while (i < size)
 	{
-		new = creat_elem(envr[i]);
+		new = create_env_elem(envr[i]);
 		current->next = new;
 		lst->last = current;
 		current = current->next;
 		i++;
 	}
 	//current->next = NULL;
-}
-
-void	*creat_elem(char *path)
-{
-	t_env	*new;
-
-	new = malloc(sizeof(*new));
-	new->key = key(path);
-	new->value = value(path);
-	new->set = 1;
-	new->next = NULL;
-	return (new);
 }

@@ -1,11 +1,17 @@
 NAME = Minishell
 
 SRCS =	main.c \
-		utils.c \
+		error.c \
+		environment.c \
 		initlst.c \
 		parsing.c \
-		init_parsing_lst.c \
-		builtins.c
+		parsing_cut_commands.c \
+		builtins.c \
+		display_utils.c \
+		str_utils.c \
+		lst_utils.c \
+		dollar.c \
+		norm_alloc.c
 
 SRCS_DIR	= srcs
 

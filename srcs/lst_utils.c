@@ -1,22 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_parsing_lst.c                                 :+:      :+:    :+:   */
+/*   lst_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/09 18:45:14 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/10 18:05:18 by cguiot           ###   ########lyon.fr   */
+/*   Created: 2022/02/10 21:38:29 by lrichard          #+#    #+#             */
+/*   Updated: 2022/02/14 16:07:11 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-t_command	*create_chunk(void)
+t_env	*create_env_elem(char *path)
+{
+	t_env	*new;
+
+	new = (t_env *)malloc(sizeof(t_env)); /// securitteeeee
+	new->key = key(path);
+	new->value = value(path);
+	new->set = 1;
+	new->next = NULL;
+	return (new);
+}
+
+t_command	*create_new_chunk(void)
 {
 	t_command *chunk;
 
-	chunk = (t_command *)malloc(sizeof(t_command));
+	if (!nmalloc((void **)&chunk, sizeof(t_command)))
+		return (0);
+	chunk->command = 0;
 	chunk->args = 0;
 	chunk->piped = 0;
 	chunk->redir_in = 0;
@@ -25,21 +39,4 @@ t_command	*create_chunk(void)
 	chunk->redir_out_path = 0;
 	chunk->next = 0;
 	return (chunk);
-}
-
-void	*get_cmd(t_command **chunk, char *line, int len, int i)
-{
-	int j;
-
-	j = 0;
-	*chunk = create_chunk();
-	if (!nmalloc((void **)&((*chunk)->command), len + 1))
-		return (0);//error(2, MEMALFAILED));
-	while (len)
-	{
-		(*chunk)->command[j] = line[i - len];
-		len--;
-		j++;
-	}
-	return (*chunk);
 }

@@ -6,103 +6,65 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/10 18:07:22 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/14 20:53:52 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	*nmalloc(void **var, int size)
+int	check_quotes(char *line)
 {
-	*var = malloc(sizeof(char) * size);
-	if (!(*var))
-		return (NULL);
-	while (size--)
-		((char *)(*var))[size] = 0;
-	return (*var);
-}
-
-
-
-
-int	pre_pre_cut(t_cmd_lst *cmd_ctrl, char *line)
-{
-	int i;
-	int	len;
-	t_command	*chunk;
+	int	i;
 
 	i = 0;
-	len = 0;
-	while (line[i] && line[i] != '|')
-	{
-		len++;
-		i++;
-	}
-	chunk = get_cmd(&chunk, line, len, i);
-	cmd_ctrl->first = chunk;
-	i++;
 	while (line[i])
 	{
-		len = 0;
-		while (line[i] && line[i] != '|')
+		if (line[i] == '\'')
 		{
-			len++;
+			i++;
+			while (line[i] && line[i] != '\'')
+				i++;
+			if (!line[i])
+				return (0);
 			i++;
 		}
-		get_cmd(&(chunk->next), line, len, i);
-		chunk = chunk->next;
-	//	dprintf(1, "test : %s$\n", chunk->command);
-		if (!chunk)
-			return (0/*error(2, MEMALFAILED)*/);
+		if (line[i] && line[i] == '"')
+		{
+			i++;
+			while (line[i] && line[i] != '"')
+				i++;
+			if (!line[i])
+				return (0);
+		}
 		i++;
 	}
 	return (1);
 }
 
-
-/*
-   int	pre_pre_cut(t_cmd_lst *cmd_ctrl, char *line)
-   {
-   int i;
-   int	j;
-   int	len;
-   t_command	*chunk;
-
-   chunk = create_chunk();
-   cmd_ctrl->first = chunk;
-   i = 0;
-   while (line[i])
-   {
-   if (!chunk)
-   return (0error(2, MEMALFAILED));
-   len = 0;
-   while (line[i] && line[i++] != '|')
-   len++;
-   if (!nmalloc((void **)&(chunk->command), len + 1))
-   return (0error(2, MEMALFAILED));
-   j = 0;
-   while (len--)
-   chunk->command[j++] = line[i - len];
-   chunk = chunk->next;
-   if (line[i])
-   chunk = create_chunk();
-   }
-   return (1);
-   }
-   */
-t_command	*parsing(char *line)
+t_cmd_lst	*parse_command(t_lst *env, char *line)
 {
+	t_command	*cmd_lst;
 	t_cmd_lst	*cmd_ctrl;
-	t_command	*aff;
 
+	(void)env;
+	cmd_lst = create_new_chunk();
 	cmd_ctrl = (t_cmd_lst *)malloc(sizeof(t_cmd_lst));
-	if (!pre_pre_cut(cmd_ctrl, line))
-		return (0);
-	aff = cmd_ctrl->first;
-	while (aff != NULL)
+	if (!cmd_lst || !cmd_ctrl)
+		return (error(MEMALFAILED));
+	cmd_ctrl->first = cmd_lst;
+	if (!check_quotes(line))
+		return (error(UNCLOSEDQUOTES));
+	if (!split_pipes(cmd_lst, line) /*|| !split_args() || !parse_redirs()*/)
+		return (error(MEMALFAILED));
+		if (!expand_dollars(env, cmd_ctrl->first))
+			return (error(MEMALFAILED));
+
+	/////////////////////// AFFICHAGE /////////////////////
+	while (cmd_lst)
 	{
-		dprintf(1, "%s\n", aff->command);
-		aff = aff->next;	
+		dprintf(1, "%s\n", cmd_lst->command);
+		cmd_lst = cmd_lst->next;
 	}
-	return (0);
+
+	return (cmd_ctrl);
 }

@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   display_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/13 16:37:49 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/14 16:18:34 by lrichard         ###   ########lyon.fr   */
+/*   Created: 2022/02/10 19:41:08 by lrichard          #+#    #+#             */
+/*   Updated: 2022/02/10 22:05:54 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	*error(char *err_msg)
+void	ft_putstr(char *str)
 {
-	ft_putstr(err_msg);
-	//free
-	return (NULL);
+	while(*str)
+	{
+		write(1, str++, 1);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:34:44 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/03 17:50:27 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 22:56:59 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,7 @@ void	echo(char *str, int fd, int i)// i = indice pour le -n, si 0 il es pas acti
 		ft_putstr_fd(fd, str);
 }
 */
-int	ft_strlen(char *str)
-{
-	int i;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
 char	*new_pwd(char *value, char *path)
 {
 	int		i;
@@ -70,7 +62,7 @@ void	cd(t_lst *data, char *path)
 
 void expor(t_lst *data, char *path)
 {
-	data->last->next = creat_elem(path);
+	data->last->next = create_env_elem(path);
 	data->last = data->last->next;
 }
 

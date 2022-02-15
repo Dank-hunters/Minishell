@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/10 17:04:46 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/03 16:29:27 by cguiot           ###   ########lyon.fr   */
+/*   Created: 2022/02/10 19:28:02 by lrichard          #+#    #+#             */
+/*   Updated: 2022/02/14 16:50:01 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	ft_putstr(char *str)
-{
-	while(*str)
-	{
-		write(1, str++, 1);
-	}
-}
-
-int	strcomp(char *need, char *key) //0 c est a bonne cle, 1 c est pas la bonne
+int get_env_size(char **envr)
 {
 	int i;
 
 	i = 0;
-	while (need[i])
-	{
-		if (need[i] != key[i])
-			return (1);
+	while(envr[i])
 		i++;
-	}
-	if (need[i] == '\0' && key[i] == '\0')
-		return (0);
-	return (1);
+	return (i);
 }
 
 void	aff_key(t_lst *data, char *str) // affiche la cle demande,
@@ -43,15 +29,15 @@ void	aff_key(t_lst *data, char *str) // affiche la cle demande,
 
 	i = 0;
 	env = data->first;
-	while (env != NULL && strcomp(str, env->key) == 1)
+	while (env != NULL && ft_strcmp(str, env->key))
 		env = env->next;
-	if (env != NULL && strcomp(str, env->key) == 0)
+	if (env != NULL && !ft_strcmp(str, env->key))
 		dprintf(1, "%s\n", env->value);
 	else
 		dprintf(1, "je dois te la rajouter\n");
 }
 
-char *found_key(t_lst *data, char *key)
+char *get_value(t_lst *data, char *key)
 {
 	t_env	*env;
 	int		i;
