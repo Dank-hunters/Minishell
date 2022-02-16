@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@istudent.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 16:18:14 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/15 19:23:01 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 14:45:43 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ void	*dealloc(void **ptr, int starti, int endi)
 		return (0);
 	i = 0;
 	while ((*(char **)ptr)[i] && i < starti)
+	{
 		((char *)tmptr)[i] = (*(char **)ptr)[i];
+		i++;
+	}
 	j = i;
 	while (j < endi)
 		j++;

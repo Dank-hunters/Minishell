@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/15 17:55:25 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 14:45:33 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 	/////////////////////// AFFICHAGE /////////////////////
 	while (cmd_lst)
 	{
-		dprintf(1, "%s\n", cmd_lst->command);
+		dprintf(1, "|%s|\n", cmd_lst->command);
 		cmd_lst = cmd_lst->next;
 	}
 

@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:20:58 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/15 19:23:20 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 14:45:32 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,12 @@ int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
 		{
 			keylen = buildkey(env, nstr, &key, *i + 1);
 		   	if (!keylen || !insalloc((void **)&nstr, key, *i, *i + keylen + 1))
-				return (0);
-			dprintf(1, "|%s|\n\n", nstr);
+				return (!keylen);
 			while (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
 				(*i)++;
 			*str = nstr;
 		}
-		if (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
+		if (nstr[*i] && (nstr[*i] != ' ' && nstr[*i] != '\n'))
 			(*i)++;
 	}
 	return (1);
@@ -84,18 +83,23 @@ int	dollar_ptlc(t_lst *env, char **str)
 		if (sstr[i] == '\'')
 			skipquotes(sstr, &i, '\'');
 		if (sstr[i] && sstr[i] != '\'')
+		{
 			if (!dollar_replace(env, str, sstr, &i))
 				return (0);
+			sstr = *str;
+		}
 		if (sstr[i])
 			i++;
 	}
-/*	i = 0;
+	i = 0;
 	while (sstr[i])
 	{
-		if (sstr[i] == '\n' && !dealloc((void **)str, i, i + 1))
+		if (sstr[i] == '\n' && !dealloc((void **)str, i, i + 1) && (i-- + 2))
 			return (0);
-		i++;
-	}*/
+		sstr = *str;
+		if (sstr[i])
+			i++;
+	}
 	return (1);
 }
 
