@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:20:58 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 17:02:21 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 18:25:03 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ void	skipquotes(char *str, int *i, char quote)
 	str[(*i)++] = '\n';
 	while (str[*i] && str[*i] != quote)
 		(*i)++;
-	if (str[*i])
-		str[(*i)++] = '\n';
+	str[(*i)++] = '\n';
 }
 
 int	buildkey(t_lst *env, char *str, char **key, int i)
@@ -84,7 +83,7 @@ int	dollar_ptlc(t_lst *env, char **str, int i)
 				return (0);
 			sstr = *str;
 		}
-		i += (sstr[i] != 0);
+		i += (sstr[i] != 0 && sstr[i] != '\'');
 	}
 	i = 0;
 	while (sstr[i])

@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/16 14:45:35 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 18:56:39 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	prompt(char **envr)
 	{
 		prt = readline("Minishell-4.2 $> ");
 		add_history(prt);
+		if (prt && *prt)
+		{	
 		cmd_ctrl = parse_command(data_env, prt);
 		//
 	//	execve(, "ls", envr);
@@ -77,6 +79,7 @@ int	prompt(char **envr)
 			unset(data_env, prt + 6);
 		if (prt[0] == 'e' && prt[1] == 'x' && prt[2] == 'p' && prt[3] == 'o' && prt[4] == 'r' && prt[5] == 't')
 			expor(data_env, prt + 7);
+		}
 	}
 	free(prt);
 	return(0);

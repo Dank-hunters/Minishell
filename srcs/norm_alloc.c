@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@istudent.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 16:18:14 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 14:45:43 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 18:33:40 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,29 @@ void	*dealloc(void **ptr, int starti, int endi)
 	free(*ptr);
 	*ptr = tmptr;
 	return (tmptr);
+}
+
+void    *nmallloc_2d(char ***var, int sizey, int sizex)
+{
+    int    i;
+    int    i3;
+
+    *var = (char **)malloc(sizeof(char *) * sizey);
+    if (!(*var))
+        return (NULL);
+    i = -1;
+    while (++i < sizey)
+    {
+        (*var)[i] = (char *)malloc(sizeof(char) * sizex);
+        if (!(*var)[i])
+        {
+            i3 = -1;
+            while (++i3 < i)
+                free((*var)[i]);
+            free(*var);
+            return (NULL);
+        }
+        ft_bzero((*var)[i], sizex);
+    }
+    return (*var);
 }

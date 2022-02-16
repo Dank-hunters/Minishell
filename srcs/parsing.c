@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/16 14:45:33 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 18:17:55 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ int	check_quotes(char *line)
 				i++;
 			if (!line[i])
 				return (0);
-			i++;
 		}
-		if (line[i] && line[i] == '"')
+		else if (line[i] && line[i] == '"')
 		{
 			i++;
 			while (line[i] && line[i] != '"')
@@ -54,7 +53,7 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 	cmd_ctrl->first = cmd_lst;
 	if (!check_quotes(line))
 		return (error(UNCLOSEDQUOTES));
-	if (!split_pipes(cmd_lst, line) /*|| !split_args() || !parse_redirs()*/)
+	if (!split_pipes(cmd_lst, line) /*|| !parse_redirs()*/ || !split_args(cmd_ctrl->first))
 		return (error(MEMALFAILED));
 	if (!expand_dollars(env, cmd_ctrl->first))
 			return (error(MEMALFAILED));

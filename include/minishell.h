@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:50 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/15 17:53:38 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 18:30:56 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ char		*trim_spaces(char *str);
 void	*nmalloc(void **var, int size);
 void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi);
 void	*dealloc(void **ptr, int starti, int endi);
+void    *nmallloc_2d(int ***var, int sizey, int sizex);
 
 //initlst
 char *key(char *str);
@@ -99,6 +100,7 @@ void	cd(t_lst *data, char *path);
 t_command		*create_new_chunk(void);
 t_cmd_lst		*parse_command(t_lst *env, char *line);
 int				split_pipes(t_command *cmd_lst, char *line);
+int				split_args(t_command *cmd_lst);
 int	expand_dollars(t_lst *env, t_command *cmd_lst);
 
 //error
