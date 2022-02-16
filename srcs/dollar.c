@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:20:58 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 14:45:32 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 17:02:21 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ int	buildkey(t_lst *env, char *str, char **key, int i)
 		j++;
 	}
 	*key = ft_strdup(get_value(env, *key));
-	if (!*key)
-		return (0);
 	return (j);
 }
 
@@ -71,13 +69,11 @@ int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
 	return (1);
 }
 
-int	dollar_ptlc(t_lst *env, char **str)
+int	dollar_ptlc(t_lst *env, char **str, int i)
 {
-	int	i;
 	char	*sstr;
 
 	sstr = *str;
-	i = 0;
 	while (sstr[i])
 	{
 		if (sstr[i] == '\'')
@@ -88,8 +84,7 @@ int	dollar_ptlc(t_lst *env, char **str)
 				return (0);
 			sstr = *str;
 		}
-		if (sstr[i])
-			i++;
+		i += (sstr[i] != 0);
 	}
 	i = 0;
 	while (sstr[i])
@@ -97,8 +92,7 @@ int	dollar_ptlc(t_lst *env, char **str)
 		if (sstr[i] == '\n' && !dealloc((void **)str, i, i + 1) && (i-- + 2))
 			return (0);
 		sstr = *str;
-		if (sstr[i])
-			i++;
+		i += (sstr[i] != 0 && sstr[i] != '\n');
 	}
 	return (1);
 }
@@ -110,7 +104,7 @@ int	expand_dollars(t_lst *env, t_command *cmd_lst)
 	(void)i;
 	while (cmd_lst)
 	{
-		if (!dollar_ptlc(env, &(cmd_lst->command)))
+		if (!dollar_ptlc(env, &(cmd_lst->command), 0))
 			return (0);
 		/*i = 1;
 		while (cmd_lst->args[i])

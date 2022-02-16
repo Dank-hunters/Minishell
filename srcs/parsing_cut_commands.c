@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 21:51:49 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/10 23:21:45 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 15:40:46 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,41 @@ int	split_pipes(t_command *cmd_lst, char *line)
 	return (1);
 }
 
-/*int	split_args(t_command *cmd_lst)
+int	argscount(char *str)
 {
+	int i;
+	int	argsn;
+
+	argsn = 0;	
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ')
+		{
+			i++;
+			if (str[i])
+				argsn++;
+			while (str[i] && str[i] != ' ')
+				i++;
+		}
+	}
+	return (argsn);
+}
+
+int	split_args(t_command *cmd_lst)
+{
+	int i;
+
+	i = 0;
+	while (cmd_lst->command[i])
+	{
+		if (cmd_lst->command[i] == ' ')
+		{
+			i++;
+		}
+	}
 	return (1);
-}*/
+}
 
 /*int	parse_redirs(t_command *cmd_lst)
 {

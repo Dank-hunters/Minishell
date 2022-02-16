@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:28:02 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/14 16:50:01 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 15:09:03 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ char *get_value(t_lst *data, char *key)
 		}
 		i++;
 	}
+	if (ft_strlen(key) != ft_strlen(env->key))
+		return (ft_strdup(""));
 	return(env->value);
 }
 
@@ -72,5 +74,7 @@ t_env	*get_key(t_lst *data, char *key)
 		}
 		i++;
 	}
+	if (ft_strlen(key) != ft_strlen(env->key) || env->set == 0)
+		return (NULL);
 	return(env);
 }
