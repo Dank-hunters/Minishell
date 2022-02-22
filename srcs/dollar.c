@@ -26,12 +26,13 @@ int	buildkey(t_lst *env, char *str, char **key, int i)
 	int len;
 
 	len = i;
-	while (str[len] && str[len] != ' ' && str[len] != '\n')
+	while (str[len] && str[len] != ' ' && str[len] != '\n' \
+			&& str[i] != '\'')
 		len++;
 	if (!nmalloc((void **)key, len + 1))
 		return (0);
 	j = 0;
-	while (str[i] && str[i] != ' ' && str[i] != '\n')
+	while (str[i] && str[i] != ' ' && str[i] != '\n' && str[i] != '\'')
 	{
 		(*key)[j] = str[i];
 		i++;
@@ -105,13 +106,13 @@ int	expand_dollars(t_lst *env, t_command *cmd_lst)
 	{
 		if (!dollar_ptlc(env, &(cmd_lst->command), 0))
 			return (0);
-		/*i = 1;
+		i = 1;
 		while (cmd_lst->args[i])
 		{
-			if (!dollar_ptlc(&(cmd_lst->args[i])))
+			if (!dollar_ptlc(env, &(cmd_lst->args[i]), 0))
 				return (0);
 			i++;
-		}*/
+		}
 		cmd_lst = cmd_lst->next;
 	}
 	return (1);

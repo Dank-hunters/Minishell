@@ -75,13 +75,13 @@ int			ft_strlen(char *str);
 int			ft_strcmp(char *s1, char *s2);
 int			str_get_index(char *str, char c);
 char		*ft_strdup(char *s);
-char		*trim_spaces(char *str);
+int		trim_spaces(char **str);
 
 // norm_alloc_utils
 void	*nmalloc(void **var, int size);
 void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi);
 void	*dealloc(void **ptr, int starti, int endi);
-void    *nmallloc_2d(int ***var, int sizey, int sizex);
+void    *nmalloc_2d(char ***var, int sizey);
 
 //initlst
 char *key(char *str);
@@ -99,9 +99,11 @@ void	cd(t_lst *data, char *path);
 //parsing
 t_command		*create_new_chunk(void);
 t_cmd_lst		*parse_command(t_lst *env, char *line);
-int				split_pipes(t_command *cmd_lst, char *line);
-int				split_args(t_command *cmd_lst);
-int	expand_dollars(t_lst *env, t_command *cmd_lst);
+int		split_pipes(t_command *cmd_lst, char *line);
+int		split_args(t_command *cmd_lst, int i, int y);
+int		expand_dollars(t_lst *env, t_command *cmd_lst);
+void		iter_through_word(char *str, int *i);		
+int	get_arg(t_command *cmd_lst, int *i, int *y);
 
 //error
 void	*error(char *err_msg);

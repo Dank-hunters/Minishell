@@ -83,23 +83,26 @@ char	*ft_strdup(char *s)
 	return (dest);
 }
 
-char	*trim_spaces(char *str)
+int	trim_spaces(char **str)
 {
 	int		i;
 	int		j;
 	char	*nstr;
 
-	if (!(nmalloc((void **)&nstr, ft_strlen(str) - excess_spaces(str) + 1)))
+	if (!(nmalloc((void **)&nstr, ft_strlen(*str) - \
+					excess_spaces(*str) + 1)))
 		return (0);
 	i = 0;
 	j = 0;
-	while (str[i] && str[i] == ' ')
+	while ((*str)[i] && (*str)[i] == ' ')
 		i++;
-	while (str[i] && str[i] != ' ')
+	while ((*str)[i] && (*str)[i] != ' ')
 	{
-		nstr[j] = str[i];
+		nstr[j] = (*str)[i];
 		i++;
 		j++;
 	}
-	return (nstr);
+	free(*str);
+	*str = nstr;
+	return (1);
 }

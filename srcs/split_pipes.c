@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 21:51:49 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 18:56:36 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/17 19:40:38 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,70 +45,3 @@ int	split_pipes(t_command *cmd_lst, char *line)
 	}
 	return (1);
 }
-
-int	argscount(char *str, int i)
-{
-	int	argsn;
-
-	argsn = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' && (++i))
-			while (str[i] && str[i] != '\'')
-				i++;
-		else if (str[i] == '"' && (++i))
-			while (str[i] && str[i] != '"')
-				i++;
-		else
-			while (str[i] && str[i] != ' ')
-				i++;
-		if (str[i] == '\'' || str[i] == '"')
-			i++;
-		if (str[i] == ' ')
-		{
-			while (str[i] && str[i] == ' ')
-				i++;
-			argsn += (str[i] != 0);
-		}
-	}
-	return (argsn);
-}
-
-int	split_args(t_command *cmd_lst)
-{
-	int i;
-	int	y;
-	int argsn;
-
-	i = 0;
-	argsn = argscount(cmd_lst->command, 0);
-	if (!nmalloc_2d((char ***)&cmd_lst->args, argsn, \
-									ft_strlen(cmd_lst->command)))
-		return (0);
-	while (str[i])
-	{
-		if (str[i] == '\'' && (++i))
-			while (str[i] && str[i] != '\'')
-				i++;
-		else if (str[i] == '"' && (++i))
-			while (str[i] && str[i] != '"')
-				i++;
-		else
-			while (str[i] && str[i] != ' ')
-				i++;
-		if (str[i] == '\'' || str[i] == '"')
-			i++;
-		if (str[i] == ' ')
-		{
-			while (str[i] && str[i] == ' ')
-				i++;
-			argsn += (str[i] != 0);
-		}
-	}
-	return (1);
-}
-
-/*int	parse_redirs(t_command *cmd_lst)
-  {
-  return (1);
-  }*/

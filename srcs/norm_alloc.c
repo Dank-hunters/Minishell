@@ -101,27 +101,14 @@ void	*dealloc(void **ptr, int starti, int endi)
 	return (tmptr);
 }
 
-void    *nmallloc_2d(char ***var, int sizey, int sizex)
+void    *nmalloc_2d(char ***var, int sizey)
 {
     int    i;
-    int    i3;
 
     *var = (char **)malloc(sizeof(char *) * sizey);
     if (!(*var))
         return (NULL);
-    i = -1;
     while (++i < sizey)
-    {
-        (*var)[i] = (char *)malloc(sizeof(char) * sizex);
-        if (!(*var)[i])
-        {
-            i3 = -1;
-            while (++i3 < i)
-                free((*var)[i]);
-            free(*var);
-            return (NULL);
-        }
-        ft_bzero((*var)[i], sizex);
-    }
+   	(*var)[i] = 0; 
     return (*var);
 }

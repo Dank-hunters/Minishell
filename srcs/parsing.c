@@ -12,6 +12,8 @@
 
 #include <minishell.h>
 
+
+
 int	check_quotes(char *line)
 {
 	int	i;
@@ -44,7 +46,6 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 {
 	t_command	*cmd_lst;
 	t_cmd_lst	*cmd_ctrl;
-
 	(void)env;
 	cmd_lst = create_new_chunk();
 	cmd_ctrl = (t_cmd_lst *)malloc(sizeof(t_cmd_lst));
@@ -53,15 +54,20 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 	cmd_ctrl->first = cmd_lst;
 	if (!check_quotes(line))
 		return (error(UNCLOSEDQUOTES));
-	if (!split_pipes(cmd_lst, line) /*|| !parse_redirs()*/ || !split_args(cmd_ctrl->first))
+	if (!split_pipes(cmd_lst, line) /*|| !parse_redirs()*/ || \
+			!split_args(cmd_ctrl->first, 0, 0))
 		return (error(MEMALFAILED));
 	if (!expand_dollars(env, cmd_ctrl->first))
 			return (error(MEMALFAILED));
 
+	int i;
 	/////////////////////// AFFICHAGE /////////////////////
 	while (cmd_lst)
 	{
-		dprintf(1, "|%s|\n", cmd_lst->command);
+		i = 1;
+		dprintf(1, "cmd : |%s|\n", cmd_lst->command);
+		while(cmd_lst->args[i]) 
+			dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
 		cmd_lst = cmd_lst->next;
 	}
 

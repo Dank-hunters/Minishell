@@ -5,7 +5,8 @@ SRCS =	main.c \
 		environment.c \
 		initlst.c \
 		parsing.c \
-		parsing_cut_commands.c \
+		split_pipes.c \
+		split_args.c \
 		builtins.c \
 		display_utils.c \
 		str_utils.c \
