@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:40:26 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 17:08:59 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 16:54:30 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,9 @@ int	excess_spaces(char *str)
 	while (str[i] && str[i] != ' ')
 		i++;
 	str += i;
-	i = 0;
-	while (str[i] && str[i] == ' ')
-		i++;
-	len_to_trim += i;
+	i = ft_strlen(str);
+	while (str[--i] && str[i] == ' ')
+		len_to_trim++;
 	return (len_to_trim);
 }
 
@@ -87,6 +86,7 @@ int	trim_spaces(char **str)
 {
 	int		i;
 	int		j;
+	int		k;
 	char	*nstr;
 
 	if (!(nmalloc((void **)&nstr, ft_strlen(*str) - \
@@ -96,7 +96,10 @@ int	trim_spaces(char **str)
 	j = 0;
 	while ((*str)[i] && (*str)[i] == ' ')
 		i++;
-	while ((*str)[i] && (*str)[i] != ' ')
+	k = ft_strlen(*str);
+	while ((*str)[--k] == ' ')
+		;
+	while ((*str)[i] && i <= k)
 	{
 		nstr[j] = (*str)[i];
 		i++;

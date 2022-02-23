@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:20:58 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 18:25:03 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 17:34:23 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	skipquotes(char *str, int *i, char quote)
 	str[(*i)++] = '\n';
 	while (str[*i] && str[*i] != quote)
 		(*i)++;
-	str[(*i)++] = '\n';
+	if (str[*i] == quote)
+		str[(*i)++] = '\n';
 }
 
 int	buildkey(t_lst *env, char *str, char **key, int i)
@@ -25,21 +26,18 @@ int	buildkey(t_lst *env, char *str, char **key, int i)
 	int	j;
 	int len;
 
-	len = i;
-	while (str[len] && str[len] != ' ' && str[len] != '\n' \
-			&& str[i] != '\'')
+	len = 0;
+	while (str[i + len] && str[i + len] != ' ' && str[i + len] != '\n' \
+			&& str[i + len] != '\'' && str[i + len] != '$')
 		len++;
 	if (!nmalloc((void **)key, len + 1))
 		return (0);
-	j = 0;
-	while (str[i] && str[i] != ' ' && str[i] != '\n' && str[i] != '\'')
-	{
-		(*key)[j] = str[i];
-		i++;
-		j++;
-	}
+	j = len;
+    i += len;
+	while (j--)
+		(*key)[j] = str[--i];
 	*key = ft_strdup(get_value(env, *key));
-	return (j);
+	return (len); //fffrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeee
 }
 
 int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
@@ -47,23 +45,24 @@ int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
 	int		j;
 	int		keylen;
 	char	*key;
+    int     iq;
 
-	j = *i;
-	while (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
+	j = 0;
+    iq = 0;
+	while (nstr[*i] && !((!iq && nstr[*i] == ' ') || (iq && nstr[*i] == '\n')))
 	{
 		j = *i;
-		if (nstr[*i] == '"' && ((*i)++ + 1))
+		if (nstr[*i] == '"' && ((*i)++ + 1) && (++iq || 1))
 			skipquotes(nstr, &j, '"');
 		if (nstr[*i] == '$')
 		{
 			keylen = buildkey(env, nstr, &key, *i + 1);
-		   	if (!keylen || !insalloc((void **)&nstr, key, *i, *i + keylen + 1))
-				return (!keylen);
-			while (nstr[*i] && nstr[*i] != ' ' && nstr[*i] != '\n')
-				(*i)++;
+		   	if (!insalloc((void **)&nstr, key, *i, *i + keylen + 1))
+				return (0);
+            *i += keylen;
 			*str = nstr;
 		}
-		if (nstr[*i] && (nstr[*i] != ' ' && nstr[*i] != '\n'))
+		if (nstr[*i])
 			(*i)++;
 	}
 	return (1);
@@ -85,6 +84,7 @@ int	dollar_ptlc(t_lst *env, char **str, int i)
 			sstr = *str;
 		}
 		i += (sstr[i] != 0 && sstr[i] != '\'');
+
 	}
 	i = 0;
 	while (sstr[i])

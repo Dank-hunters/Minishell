@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@istudent.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 16:18:14 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 18:33:40 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 16:02:12 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi)
 									slen + chunklen - (endi - starti) + 2))
 		return (0);
 	i = -1;
-	if (*(char **)ptr)
+	if (*(char **)ptr && endi - starti > 1)
 	{
 		while ((++i + 1) && (*(char **)ptr)[i] && i < starti)
 			tmptr[i] = (*(char **)ptr)[i];
@@ -64,11 +64,13 @@ void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi)
 			tmptr[i++] = *(char *)mem_to_add++;
 		while ((*(char **)ptr)[endi])
 			tmptr[i++] = (*(char **)ptr)[endi++];
+        free(*ptr);
+	    *ptr = tmptr;
 	}
+    else
+        free(tmptr);
 	free(mem_to_add - chunklen);
-	free(*ptr);
-	*ptr = tmptr;
-	return (tmptr);
+	return (*ptr);
 }
 
 void	*dealloc(void **ptr, int starti, int endi)
@@ -105,7 +107,8 @@ void    *nmalloc_2d(char ***var, int sizey)
 {
     int    i;
 
-    *var = (char **)malloc(sizeof(char *) * sizey);
+    i = 0;
+	*var = (char **)malloc(sizeof(char *) * sizey);
     if (!(*var))
         return (NULL);
     while (++i < sizey)

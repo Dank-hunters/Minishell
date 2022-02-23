@@ -6,13 +6,11 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/16 18:17:55 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 16:57:13 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-
 
 int	check_quotes(char *line)
 {
@@ -57,11 +55,17 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 	if (!split_pipes(cmd_lst, line) /*|| !parse_redirs()*/ || \
 			!split_args(cmd_ctrl->first, 0, 0))
 		return (error(MEMALFAILED));
+    while (cmd_lst)
+    {
+        cmd_lst->args[0] = cmd_lst->command;
+        cmd_lst = cmd_lst->next;
+    }
 	if (!expand_dollars(env, cmd_ctrl->first))
-			return (error(MEMALFAILED));
+		return (error(MEMALFAILED));
 
-	int i;
 	/////////////////////// AFFICHAGE /////////////////////
+	cmd_lst = cmd_ctrl->first;
+    int i;
 	while (cmd_lst)
 	{
 		i = 1;

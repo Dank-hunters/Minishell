@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:49:21 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/22 18:49:23 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 16:54:42 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,18 @@ void	iter_through_word(char *str, int *i)
 	while (str[*i] == ' ')
 		(*i)++;
 	if (str[*i] == '\'' && ++(*i))
-		while (str[*i] && str[*i] != '\'')
+    {
+        while (str[*i] && str[*i] != '\'')
 			(*i)++;
+        (*i)++;
+    }
 	else if (str[*i] == '"' && ++(*i))
-		while (str[*i] && str[*i] != '"')
+    {
+        while (str[*i] && str[*i] != '"')
 			(*i)++;
-	else
-		while (str[*i] && str[*i] != ' ')
-			(*i)++;
-	if (str[*i] == '\'' || str[*i] == '"')
+        (*i)++;
+    }
+	while (str[*i] && str[*i] != ' ')
 		(*i)++;
 }
 
@@ -83,7 +86,6 @@ int	split_args(t_command *cmd_lst, int i, int y)
 		if (!nmalloc_2d((char ***)&(cmd_lst->args), \
 				(argscount(cmd_lst->command) + 2)))
 			return (0);
-		cmd_lst->args[0] = cmd_lst->command;
 		if (!argscount(cmd_lst->command))
 		{
 			if (!trim_spaces(&(cmd_lst->command)))
@@ -99,7 +101,6 @@ int	split_args(t_command *cmd_lst, int i, int y)
 				return (0);
 		if (!trim_spaces(&(cmd_lst->command)))
 			return (0);
-		cmd_lst->args[0] = cmd_lst->command;
 		cmd_lst = cmd_lst->next;
 	}
 	return (1);
