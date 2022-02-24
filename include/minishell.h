@@ -73,7 +73,6 @@ int	main(int ac, char **av, char **const	envr);
 void		ft_putstr(char *str);
 int			ft_strlen(char *str);
 int			ft_strcmp(char *s1, char *s2);
-int			str_get_index(char *str, char c);
 char		*ft_strdup(char *s);
 int		trim_spaces(char **str);
 
@@ -102,7 +101,7 @@ t_cmd_lst		*parse_command(t_lst *env, char *line);
 int		split_pipes(t_command *cmd_lst, char *line);
 int		split_args(t_command *cmd_lst, int i, int y);
 int		expand_dollars(t_lst *env, t_command *cmd_lst);
-void		iter_through_word(char *str, int *i);		
+//void		iter_through_word(char *str, int *i);		
 int	get_arg(t_command *cmd_lst, int *i, int *y);
 
 //error

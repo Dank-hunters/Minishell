@@ -12,11 +12,30 @@
 
 #include <minishell.h>
 
+int	pipe_get_index(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != '|')
+	{
+		if (str[i] == '\'' && ++i)
+			while (str[i] && str[i] != '\'')
+				i++;
+		if (str[i] == '"' && ++i)
+			while (str[i] && str[i] != '"')
+				i++;
+		if (str[i])
+			i++;
+	}
+	return (i);
+}
+
 int	get_command_chunk(char **command, char *line, int *i)
 {
 	int	len;
 
-	len = str_get_index(line, '|');
+	len = pipe_get_index(line);
 	if (!nmalloc((void **)command, len + 1))
 		return (0);
 	*i += len;
@@ -36,7 +55,7 @@ int	split_pipes(t_command *cmd_lst, char *line)
 			return (0);
 		if (!get_command_chunk(&(cmd_lst->command), line + i, &i))
 			return (0);
-		if (line[i + 1])
+		if (line[i])
 		{
 			cmd_lst->next = create_new_chunk();
 			cmd_lst = cmd_lst->next;

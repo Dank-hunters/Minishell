@@ -26,6 +26,8 @@ INC = $(INC_DIR)/minishell.h
 
 FS = -fsanitize=address -g3
 
+#FS  =  -Wall
+
 CFLAGS = -Wall -Wextra -Werror -I $(INC_DIR)
 
 

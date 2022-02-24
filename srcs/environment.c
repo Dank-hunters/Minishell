@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:28:02 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/16 15:09:03 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/24 17:49:40 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char *get_value(t_lst *data, char *key)
 
 	i = 0;
 	env = data->first;
-	while (key[i])
+	while (env && key[i])
 	{
 		if (key[i] != env->key[i])
 		{
@@ -53,10 +53,14 @@ char *get_value(t_lst *data, char *key)
 		}
 		i++;
 	}
-	if (ft_strlen(key) != ft_strlen(env->key))
+	if (env && ft_strlen(key) != ft_strlen(env->key))
 		return (ft_strdup(""));
-	return(env->value);
+	if (env)
+		return(env->value);
+	else 
+		return (ft_strdup(""));
 }
+
 
 t_env	*get_key(t_lst *data, char *key)
 {
@@ -65,7 +69,7 @@ t_env	*get_key(t_lst *data, char *key)
 
 	i = 0;
 	env = data->first;
-	while (key[i])
+	while (env && key[i])
 	{
 		if (key[i] != env->key[i])
 		{
@@ -74,7 +78,7 @@ t_env	*get_key(t_lst *data, char *key)
 		}
 		i++;
 	}
-	if (ft_strlen(key) != ft_strlen(env->key) || env->set == 0)
+	if (env && (ft_strlen(key) != ft_strlen(env->key) || env->set == 0))
 		return (NULL);
 	return(env);
 }

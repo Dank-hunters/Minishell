@@ -5,8 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/24 17:49:34 by lrichard          #+#    #+#             */
+/*   Updated: 2022/02/24 17:49:35 by lrichard         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dollar.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:20:58 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/23 17:34:23 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/02/24 17:45:23 by lrichard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +33,34 @@ void	skipquotes(char *str, int *i, char quote)
 		str[(*i)++] = '\n';
 }
 
-int	buildkey(t_lst *env, char *str, char **key, int i)
+int	buildkey(t_lst *env, char *str, char **key, int *i)
 {
 	int	j;
+	int iq;
 	int len;
 
-	len = 0;
-	while (str[i + len] && str[i + len] != ' ' && str[i + len] != '\n' \
-			&& str[i + len] != '\'' && str[i + len] != '$')
+	j = 0;
+	iq = 0;
+	while (str[j])
+		if (str[j++] == '\n')
+			iq = 1;
+	len = ++(*i) - *i;
+	while (str[*i + len] && str[*i + len] != ' ' && str[*i + len] != '\n' \
+			&& str[*i + len] != '\'' && str[*i + len] != '$' \
+			&& str[*i + len] != '"')
 		len++;
+	if (!iq && len == 0 && (str[*i + len] == '\'' || str[*i + len] == '"'))
+		str[(*i) + len - 1] = '\n';
 	if (!nmalloc((void **)key, len + 1))
 		return (0);
 	j = len;
-    i += len;
+	//dprintf(1, "|I AVANT BOUCLE:%i|\n", *i);
+	*i += len;
 	while (j--)
-		(*key)[j] = str[--i];
+		(*key)[j] = str[--(*i)];
 	*key = ft_strdup(get_value(env, *key));
+	//	dprintf(1, "i|I APRES BOUCLE:%i|\n", *i);
+	*i += ft_strlen(*key) - 1;
 	return (len); //fffrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeee
 }
 
@@ -45,24 +69,25 @@ int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
 	int		j;
 	int		keylen;
 	char	*key;
-    int     iq;
+	int     iq;
 
 	j = 0;
-    iq = 0;
-	while (nstr[*i] && !((!iq && nstr[*i] == ' ') || (iq && nstr[*i] == '\n')))
+	iq = 0;
+	while (nstr[*i] && !((!iq && nstr[*i] == ' ') || \
+		(iq && nstr[*i] == '\n') || (!iq && nstr[*i] == '\'')))
 	{
 		j = *i;
-		if (nstr[*i] == '"' && ((*i)++ + 1) && (++iq || 1))
+		if (nstr[j] == '"' && ((*i)++ + 1) && (++iq || 1))
 			skipquotes(nstr, &j, '"');
 		if (nstr[*i] == '$')
-		{
-			keylen = buildkey(env, nstr, &key, *i + 1);
-		   	if (!insalloc((void **)&nstr, key, *i, *i + keylen + 1))
+		{	
+			keylen = buildkey(env, nstr, &key, i);
+			if (!insalloc((void **)&nstr, key, *i - ft_strlen(key), \
+										*i - ft_strlen(key) + keylen + 1))
 				return (0);
-            *i += keylen;
 			*str = nstr;
 		}
-		if (nstr[*i])
+		if (nstr[*i] && (nstr[*i] != '$' || !keylen) && !(!iq && nstr[*i] == '\''))
 			(*i)++;
 	}
 	return (1);
@@ -84,7 +109,6 @@ int	dollar_ptlc(t_lst *env, char **str, int i)
 			sstr = *str;
 		}
 		i += (sstr[i] != 0 && sstr[i] != '\'');
-
 	}
 	i = 0;
 	while (sstr[i])

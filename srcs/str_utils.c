@@ -38,16 +38,6 @@ int	ft_strcmp(char *s1, char *s2)
 	return (str1[i] - str2[i]);
 }
 
-int	str_get_index(char *str, char c)
-{
-	char *sstr;
-
-	sstr = str;
-	while (*str && *str != c)
-		str++;
-	return (str - sstr);
-}
-
 int	excess_spaces(char *str)
 {
 	int	i;
@@ -58,11 +48,8 @@ int	excess_spaces(char *str)
 	while (str[i] && str[i] == ' ')
 		i++;
 	len_to_trim = i;
-	while (str[i] && str[i] != ' ')
-		i++;
-	str += i;
 	i = ft_strlen(str);
-	while (str[--i] && str[i] == ' ')
+	while (--i >= 0 && str[i] && str[i] == ' ')
 		len_to_trim++;
 	return (len_to_trim);
 }

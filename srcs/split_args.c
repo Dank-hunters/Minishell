@@ -12,51 +12,51 @@
 
 #include <minishell.h>
 
+int	iter_through_word(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] == ' ')
+		i++;
+	while (str[i] && str[i] != ' ')
+	{
+		if (str[i] == '\'' && ++i)
+			while (str[i] && str[i] != '\'')
+				i++;
+		if (str[i] == '"' && ++i)
+			while (str[i] && str[i] != '"')
+				i++;
+		if (str[i])
+			i++;
+	}
+	return (i);
+}
+
 int	get_arg(t_command *cmd_lst, int *i, int *y)
 {
 	int x;
 	int j;
 	int len;
 
-	j = *i;
-	
-	while (*i && cmd_lst->command[(*i)] == ' ')
+	while (cmd_lst->command[*i] && cmd_lst->command[*i] == ' ')
 		(*i)++;
-	if (!*i || !cmd_lst->command[(*i)])
+	if (!cmd_lst->command[*i])
 		return (1);
-	iter_through_word(cmd_lst->command, i);
-	len = *i - j;	if (!nmalloc((void **)&(cmd_lst->args[*y]), sizeof(char) * (len + 1)))
+	len = iter_through_word(cmd_lst->command + *i);
+	if (!nmalloc((void **)&(cmd_lst->args[*y]), sizeof(char) * (len + 1)))
 		return (0);
 	x = 0;
-	while (j < *i)
+	j = *i;
+	while (j < *i + len)
 		cmd_lst->args[*y][x++] = cmd_lst->command[j++];
 	cmd_lst->args[*y][x] = 0;
-	if (!dealloc((void **)&(cmd_lst->command), j - x, *i))
+	if (!dealloc((void **)&(cmd_lst->command), j - len, *i + len))
 		return (0);
-	*i = j - x;
+	*i = j - len;
 	trim_spaces(&(cmd_lst->args[*y]));
 	(*y)++;
 	return (1);
-}
-
-void	iter_through_word(char *str, int *i)
-{
-	while (str[*i] == ' ')
-		(*i)++;
-	if (str[*i] == '\'' && ++(*i))
-    {
-        while (str[*i] && str[*i] != '\'')
-			(*i)++;
-        (*i)++;
-    }
-	else if (str[*i] == '"' && ++(*i))
-    {
-        while (str[*i] && str[*i] != '"')
-			(*i)++;
-        (*i)++;
-    }
-	while (str[*i] && str[*i] != ' ')
-		(*i)++;
 }
 
 int	argscount(char *str)
@@ -68,7 +68,7 @@ int	argscount(char *str)
 	argsn = 0;
 	while (str[i])
 	{
-		iter_through_word(str, &i);
+		i += iter_through_word(str + i);
 		if (str[i] == ' ')
 		{
 			while (str[i] && str[i] == ' ')
@@ -84,7 +84,7 @@ int	split_args(t_command *cmd_lst, int i, int y)
 	while (cmd_lst)
 	{
 		if (!nmalloc_2d((char ***)&(cmd_lst->args), \
-				(argscount(cmd_lst->command) + 2)))
+					(argscount(cmd_lst->command) + 2)))
 			return (0);
 		if (!argscount(cmd_lst->command))
 		{
@@ -94,7 +94,7 @@ int	split_args(t_command *cmd_lst, int i, int y)
 			continue;
 		}
 		i = 0;
-		iter_through_word(cmd_lst->command, &i);
+		i += iter_through_word(cmd_lst->command);
 		y = 1;
 		while (cmd_lst->command[i])
 			if (!get_arg(cmd_lst, &i, &y))
