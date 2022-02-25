@@ -32,11 +32,9 @@ t_command	*create_new_chunk(void)
 		return (0);
 	chunk->command = 0;
 	chunk->args = 0;
-	chunk->redirs[0] = 0;
-	chunk->redirs[1] = 0;
-	chunk->redir_in = 0;
+	chunk->redir_in_type = 0;
 	chunk->redir_in_path = 0;
-	chunk->redir_out = 0;
+	chunk->redir_out_type = 0;
 	chunk->redir_out_path = 0;
 	chunk->next = 0;
 	return (chunk);

@@ -35,10 +35,9 @@ typedef struct s_command
 {
 	char				*command;
 	char				**args;
-	char				*redirs[2];
-	int					redir_in;
+	int					redir_in_type;
 	int					redir_in_path;
-	int					redir_out;
+	int					redir_out_type;
 	int					redir_out_path;
 	struct s_command	*next;
 }				t_command;
@@ -74,7 +73,8 @@ void		ft_putstr(char *str);
 int			ft_strlen(char *str);
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_strdup(char *s);
-int		trim_spaces(char **str);
+int		    trim_spaces(char **str);
+char        *ft_strncpy(char *dest, char *src, int len);
 
 // norm_alloc_utils
 void	*nmalloc(void **var, int size);

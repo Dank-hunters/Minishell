@@ -12,25 +12,12 @@
 
 #include <minishell.h>
 
-int get_redirs_end(t_command *cmd_lst)
-{
-
-}
-
-int get_redirs_start(t_command *cmd_lst, char *line)
-{
-    while (str[i])
-    {
-        
-    }
-}
-
 int	pipe_get_index(char *str)
 {
 	int i;
 
 	i = 0;
-	while (str[i] && str[i] != '|')
+	while (str[i] && (str[i] != '|' && !(i && str[i - 1] == '>')))
 	{
 		if (str[i] == '\'' && ++i)
 			while (str[i] && str[i] != '\'')
@@ -48,14 +35,12 @@ int	get_command_chunk(t_command *cmd_lst, char *line, int *i)
 {
 	int	len;
 
-    if (!get_redirs_start(cmd_lst, line))
-        return (0);
 	len = pipe_get_index(line);
-	if (!nmalloc((void **)cmd_lst->command, len + 1))
+	if (!nmalloc((void **)&cmd_lst->command, len + 1))
 		return (0);
 	*i += len;
 	while (len--)
-		(*(cmd_lst->command))[len] = line[len];
+		(cmd_lst->command)[len] = line[len];
 	return (1);
 }
 
@@ -68,7 +53,7 @@ int	split_pipes(t_command *cmd_lst, char *line)
 	{
 		if (!cmd_lst)
 			return (0);
-		if (!get_command_chunk(&(cmd_lst->command), line + i, &i))
+		if (!get_command_chunk(cmd_lst, line + i, &i))
 			return (0);
 		if (line[i])
 		{

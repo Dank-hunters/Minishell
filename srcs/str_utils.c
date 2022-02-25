@@ -54,21 +54,6 @@ int	excess_spaces(char *str)
 	return (len_to_trim);
 }
 
-char	*ft_strdup(char *s)
-{
-	int		i;
-	char	*dest;
-
-	dest = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!dest || !s)
-		return (NULL);
-	i = -1;
-	while (s[++i])
-		dest[i] = s[i];
-	dest[i] = 0;
-	return (dest);
-}
-
 int	trim_spaces(char **str)
 {
 	int		i;
@@ -95,4 +80,19 @@ int	trim_spaces(char **str)
 	free(*str);
 	*str = nstr;
 	return (1);
+}
+
+char	*ft_strdup(char *s)
+{
+	int		i;
+	char	*dest;
+
+	dest = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!dest || !s)
+		return (NULL);
+	i = -1;
+	while (s[++i])
+		dest[i] = s[i];
+	dest[i] = 0;
+	return (dest);
 }

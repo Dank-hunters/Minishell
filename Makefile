@@ -10,6 +10,7 @@ SRCS =	main.c \
 		builtins.c \
 		display_utils.c \
 		str_utils.c \
+		str_utils2.c \
 		lst_utils.c \
 		dollar.c \
 		norm_alloc.c
