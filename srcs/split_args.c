@@ -105,4 +105,3 @@ int	split_args(t_command *cmd_lst, int i, int y)
 	}
 	return (1);
 }
-

@@ -49,13 +49,13 @@ int	buildkey(t_lst *env, char *str, char **key, int *i)
 			&& str[*i + len] != '\'' && str[*i + len] != '$' \
 			&& str[*i + len] != '"')
 		len++;
-	if (!iq && len == 0 && (str[*i + len] == '\'' || str[*i + len] == '"'))
-		str[(*i) + len - 1] = '\n';
+	*i += len;
+	if (!iq && len == 0 && (str[*i] == '\'' || str[*i] == '"'))
+		str[*i - 1] = '\n';
 	if (!nmalloc((void **)key, len + 1))
 		return (0);
 	j = len;
 	//dprintf(1, "|I AVANT BOUCLE:%i|\n", *i);
-	*i += len;
 	while (j--)
 		(*key)[j] = str[--(*i)];
 	*key = ft_strdup(get_value(env, *key));
@@ -64,30 +64,30 @@ int	buildkey(t_lst *env, char *str, char **key, int *i)
 	return (len); //fffrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeee
 }
 
-int	dollar_replace(t_lst *env, char **str, char *nstr, int *i)
+int	dollar_replace(t_lst *env, char **str, char *ns, int *i)
 {
-	int		j;
+	int		j[2];
 	int		keylen;
 	char	*key;
-	int     iq;
 
-	j = 0;
-	iq = 0;
-	while (nstr[*i] && !((!iq && nstr[*i] == ' ') || \
-		(iq && nstr[*i] == '\n') || (!iq && nstr[*i] == '\'')))
+	j[0] = 0;
+	j[1] = 0;
+	while (ns[*i] && !((!j[1] && ns[*i] == ' ') || \
+		(j[1] && ns[*i] == '\n') || (!j[1] && ns[*i] == '\'')))
 	{
-		j = *i;
-		if (nstr[j] == '"' && ((*i)++ + 1) && (++iq || 1))
-			skipquotes(nstr, &j, '"');
-		if (nstr[*i] == '$')
+		j[0] = *i;
+		if (ns[j[0]] == '"' && ((*i)++ + 1) && (++j[1] || 1))
+			skipquotes(ns, &(j[0]), '"');
+		if (ns[*i] == '$')
 		{	
-			keylen = buildkey(env, nstr, &key, i);
-			if (!insalloc((void **)&nstr, key, *i - ft_strlen(key), \
-										*i - ft_strlen(key) + keylen + 1))
+			keylen = buildkey(env, ns, &key, i);
+			if (!insalloc((void **)&ns, key, \
+			*i - ft_strlen(key), *i - ft_strlen(key) + keylen + 1))
 				return (0);
-			*str = nstr;
+			*str = ns;
 		}
-		if (nstr[*i] && (nstr[*i] != '$' || !keylen) && !(!iq && nstr[*i] == '\''))
+		if (ns[*i] && (ns[*i] != '$' || !keylen) && (ns[*i] != '"') && \
+		!(!j[1] && ns[*i] == '\'') && !(j[1] && ns[*i] == '\n'))
 			(*i)++;
 	}
 	return (1);
@@ -108,7 +108,7 @@ int	dollar_ptlc(t_lst *env, char **str, int i)
 				return (0);
 			sstr = *str;
 		}
-		i += (sstr[i] != 0 && sstr[i] != '\'');
+		i += (sstr[i] != 0 && sstr[i] != '\n' && sstr[i] != '\'');
 	}
 	i = 0;
 	while (sstr[i])

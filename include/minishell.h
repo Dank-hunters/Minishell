@@ -35,7 +35,7 @@ typedef struct s_command
 {
 	char				*command;
 	char				**args;
-	int					piped;
+	char				*redirs[2];
 	int					redir_in;
 	int					redir_in_path;
 	int					redir_out;
