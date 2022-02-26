@@ -96,7 +96,7 @@ int	dollar_replace(t_lst *env, char **str, char *ns, int *i)
 int	dollar_ptlc(t_lst *env, char **str, int i)
 {
 	char	*sstr;
-
+    
 	sstr = *str;
 	while (sstr[i])
 	{

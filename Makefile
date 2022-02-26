@@ -7,6 +7,7 @@ SRCS =	main.c \
 		parsing.c \
 		split_pipes.c \
 		split_args.c \
+		parse_redirections.c \
 		builtins.c \
 		display_utils.c \
 		str_utils.c \

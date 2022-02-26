@@ -69,10 +69,9 @@ int	check_syntax(char *s)
 		if (s[i] == '\'' || s[i] == '"')
 			sqs(s, &i, s[i]);
 		if (s[i] == '>')
-			if ((!sss(s, &i) || (s[i] == '>' && i && s[i - 1] == ' ') || \
-			    s[i] == '<' || \
-			    (s[i] == '|' && !(i && s[i - 1] == '>')) || !sss(s, &i) || \
-		    	(s[i] == '>' && (!sss(s, &i) || s[i] == '>'))))
+			if (!sss(s, &i) || (s[i] == '>' && i && s[i - 1] == ' ') || \
+			    s[i] == '<' || s[i] == '|' || !sss(s, &i) || \
+		    	(s[i] == '>' && (!sss(s, &i) || s[i] == '>')))
 				return (0);
 		if (s[i] == '<')
 			if (!sss(s, &i) || s[i] == '|' || \
@@ -97,9 +96,9 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 		return (0); // errmsg alloc failed
 	cmd_ctrl->first = cmd_lst;
 	if (!check_syntax(line))
-		return (0); // errms syntax
+		return (0); // errmsg syntax
 	if (!split_pipes(cmd_lst, line) || \
-        /*!parse_redirs(cmd_lst, line) || \*/
+        !parse_redirs(cmd_lst, env) || \
         !split_args(cmd_ctrl->first, 0, 0))
 		return (0); // errmsg alloc failed / open failed
 	if (!expand_dollars(env, cmd_ctrl->first))

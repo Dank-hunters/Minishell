@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -36,9 +37,11 @@ typedef struct s_command
 	char				*command;
 	char				**args;
 	int					redir_in_type;
-	int					redir_in_path;
+	char				*redir_in_path;
+    int                 redir_in_fd;
 	int					redir_out_type;
-	int					redir_out_path;
+	char				*redir_out_path;
+    int                 redir_out_fd;
 	struct s_command	*next;
 }				t_command;
 
@@ -98,9 +101,12 @@ void	cd(t_lst *data, char *path);
 //parsing
 t_command		*create_new_chunk(void);
 t_cmd_lst		*parse_command(t_lst *env, char *line);
+int     		parse_redirs(t_command *cmd_lst, t_lst *env);
 int		split_pipes(t_command *cmd_lst, char *line);
 int		split_args(t_command *cmd_lst, int i, int y);
 int		expand_dollars(t_lst *env, t_command *cmd_lst);
+int	dollar_ptlc(t_lst *env, char **str, int i);
+
 //void		iter_through_word(char *str, int *i);		
 int	get_arg(t_command *cmd_lst, int *i, int *y);
 

@@ -17,7 +17,7 @@ int	pipe_get_index(char *str)
 	int i;
 
 	i = 0;
-	while (str[i] && (str[i] != '|' && !(i && str[i - 1] == '>')))
+	while (str[i] && str[i] != '|')
 	{
 		if (str[i] == '\'' && ++i)
 			while (str[i] && str[i] != '\'')
