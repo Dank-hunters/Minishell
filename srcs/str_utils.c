@@ -61,28 +61,26 @@ int	trim_spaces(char **str)
 	int		k;
 	char	*nstr;
 
-	if (!(nmalloc((void **)&nstr, ft_strlen(*str) - \
+	k = ft_strlen(*str);
+    if (k == 0)
+        return (1);
+	if (!(nmalloc((void **)&nstr, k - \
 					excess_spaces(*str) + 1)))
 		return (0);
 	i = 0;
 	j = 0;
 	while ((*str)[i] && (*str)[i] == ' ')
 		i++;
-	k = ft_strlen(*str);
 	while ((*str)[--k] == ' ')
 		;
 	while ((*str)[i] && i <= k)
-	{
-		nstr[j] = (*str)[i];
-		i++;
-		j++;
-	}
+		nstr[j++] = (*str)[i++];
 	free(*str);
 	*str = nstr;
 	return (1);
 }
 
-char	*ft_strdup(char *s)
+char	*ft_strdup(char *s, int frees)
 {
 	int		i;
 	char	*dest;
@@ -94,5 +92,7 @@ char	*ft_strdup(char *s)
 	while (s[++i])
 		dest[i] = s[i];
 	dest[i] = 0;
+    if (frees)
+        free(s);
 	return (dest);
 }

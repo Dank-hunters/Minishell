@@ -12,9 +12,11 @@ SRCS =	main.c \
 		display_utils.c \
 		str_utils.c \
 		str_utils2.c \
+		ft_split.c \
 		lst_utils.c \
 		dollar.c \
-		norm_alloc.c
+		norm_alloc.c \
+		exec.c
 
 SRCS_DIR	= srcs
 

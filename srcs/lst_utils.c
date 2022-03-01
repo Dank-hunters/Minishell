@@ -21,6 +21,7 @@ t_env	*create_env_elem(char *path)
 	new->value = value(path);
 	new->set = 1;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
 
@@ -37,5 +38,6 @@ t_command	*create_new_chunk(void)
 	chunk->redir_out_type = 0;
 	chunk->redir_out_path = 0;
 	chunk->next = 0;
+	chunk->prev = 0;
 	return (chunk);
 }

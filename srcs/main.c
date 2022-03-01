@@ -66,8 +66,11 @@ int	prompt(char **envr)
 		if (prt && *prt)
 		{	
 		cmd_ctrl = parse_command(data_env, prt);
-		//
+        execute(cmd_ctrl->first, data_env); // boucler ça
+/*		//
 	//	execve(, "ls", envr);
+		if (prt[0] == 'c' && prt[1] == 'd')
+            cd(data_env, prt + 3);
 		if (prt[0] == 'e' && prt[1] == 'n' && prt[2] == 'v')
 			//env(&data_env, 0);
 			aff(data_env);
@@ -78,7 +81,7 @@ int	prompt(char **envr)
 		if (prt[0] == 'u' && prt[1] == 'n' && prt[2] == 's' && prt[3] == 'e' && prt[4] == 't')
 			unset(data_env, prt + 6);
 		if (prt[0] == 'e' && prt[1] == 'x' && prt[2] == 'p' && prt[3] == 'o' && prt[4] == 'r' && prt[5] == 't')
-			expor(data_env, prt + 7);
+			expor(data_env, prt + 7);*/
 		}
 	}
 	free(prt);

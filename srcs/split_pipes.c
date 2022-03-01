@@ -58,6 +58,7 @@ int	split_pipes(t_command *cmd_lst, char *line)
 		if (line[i])
 		{
 			cmd_lst->next = create_new_chunk();
+			cmd_lst->next->prev = cmd_lst;
 			cmd_lst = cmd_lst->next;
 		}
 		i++;

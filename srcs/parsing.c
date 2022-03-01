@@ -69,15 +69,15 @@ int	check_syntax(char *s)
 		if (s[i] == '\'' || s[i] == '"')
 			sqs(s, &i, s[i]);
 		if (s[i] == '>')
-			if (!sss(s, &i) || (s[i] == '>' && i && s[i - 1] == ' ') || \
-			    s[i] == '<' || s[i] == '|' || !sss(s, &i) || \
-		    	(s[i] == '>' && (!sss(s, &i) || s[i] == '>')))
+			if (!sss(s, &i) || (s[i] == '>' && i && s[i - 1] == ' ') || 
+			    s[i] == '<' || s[i] == '|' || !sss(s, &i) || s[i] == '>' || \
+                s[i] == '|' || s[i] == '<')
 				return (0);
 		if (s[i] == '<')
-			if (!sss(s, &i) || s[i] == '|' || \
-                (i && s[i - 1] == ' ' && (s[i] == '>' || s[i] == '<')) || \
-			    (i && s[i - 1] == '<' && s[i] == '<' && s[i + 1] == '<'))
-				return (0);
+			if (!sss(s, &i) || (s[i] == '<' && i && s[i - 1] == ' ') || 
+			    s[i] == '>' || s[i] == '|' || !sss(s, &i) || s[i] == '<' || \
+                s[i] == '|' || s[i] == '>')
+				return (0);	
 		if (s[i] == '|' && s[i + 1] == '|')
 			return (0);
 		i++;
@@ -96,14 +96,23 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 		return (0); // errmsg alloc failed
 	cmd_ctrl->first = cmd_lst;
 	if (!check_syntax(line))
+    {
+        dprintf(1, "PIUte"); 
 		return (0); // errmsg syntax
-	if (!split_pipes(cmd_lst, line) || \
+    }
+    if (!split_pipes(cmd_lst, line) || \
         !parse_redirs(cmd_lst, env) || \
         !split_args(cmd_ctrl->first, 0, 0))
-		return (0); // errmsg alloc failed / open failed
-	if (!expand_dollars(env, cmd_ctrl->first))
+    {
+        dprintf(1, "alloc open");
+        return (0); // errmsg alloc failed / open failed
+    }
+    if (!expand_dollars(env, cmd_ctrl->first))
+    {
+        dprintf(1, "alloc");
 		return (0); // errmsg alloc failed
-	while (cmd_lst)
+    }
+    while (cmd_lst)
 	{
 		cmd_lst->args[0] = cmd_lst->command;
 		cmd_lst = cmd_lst->next;
@@ -115,9 +124,15 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 	{
 		i = 1;
 		dprintf(1, "cmd : |%s|\n", cmd_lst->command);
+		dprintf(1, "redir out :|%s|\n",cmd_lst->redir_out_path);
+		dprintf(1, "redir in :|%s|\n",cmd_lst->redir_in_path);
+//		dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
+//		dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
 		while(cmd_lst->args[i]) 
-			dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
-		cmd_lst = cmd_lst->next;
+        {
+            dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
+        }
+        cmd_lst = cmd_lst->next;
 	}
 
 	return (cmd_ctrl);

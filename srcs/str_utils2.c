@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <minishell.h>
+
 char	*ft_strncpy(char *dst, char *src, int len)
 {
 	char	*dest;
@@ -23,4 +25,41 @@ char	*ft_strncpy(char *dst, char *src, int len)
 			*dst = 0;
 	}
 	return (dest);
+}
+
+int ft_strchr(char *str, char c)
+{
+    int i;
+
+    i = 0;
+    if (!str)
+        return (0);
+    while (str[i])
+        if (str[i++] == c)
+            return (1);
+    return (0);
+}
+
+char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
+{
+	int 	len;
+	char	*nstr;
+
+	if (!s1 || !s2)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	nstr = (char *)malloc(sizeof(char) * (len + 1));
+	if (!nstr)
+		return (NULL);
+	nstr[len] = 0;
+	len = 0;
+	while (*s1)
+		nstr[len++] = *(s1++);
+	while (*s2)
+		nstr[len++] = *(s2++);
+    if (frees1)
+        free(s1);
+    if (frees2)
+        free(s2);
+	return (nstr);
 }

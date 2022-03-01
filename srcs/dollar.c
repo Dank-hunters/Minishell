@@ -58,7 +58,7 @@ int	buildkey(t_lst *env, char *str, char **key, int *i)
 	//dprintf(1, "|I AVANT BOUCLE:%i|\n", *i);
 	while (j--)
 		(*key)[j] = str[--(*i)];
-	*key = ft_strdup(get_value(env, *key));
+	*key = ft_strdup(get_value(env, *key), 1);
 	//	dprintf(1, "i|I APRES BOUCLE:%i|\n", *i);
 	*i += ft_strlen(*key) - 1;
 	return (len); //fffrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeee

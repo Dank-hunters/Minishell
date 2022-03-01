@@ -54,11 +54,11 @@ char *get_value(t_lst *data, char *key)
 		i++;
 	}
 	if (env && ft_strlen(key) != ft_strlen(env->key))
-		return (ft_strdup(""));
+		return (ft_strdup("", 0));
 	if (env)
 		return(env->value);
 	else 
-		return (ft_strdup(""));
+		return (ft_strdup("", 0));
 }
 
 

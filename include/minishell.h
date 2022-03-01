@@ -29,6 +29,7 @@ typedef struct s_env
 	char			*value;
 	int				set ;
 	struct s_env	*next;
+	struct s_env	*prev;
 
 }				t_env;
 
@@ -43,6 +44,7 @@ typedef struct s_command
 	char				*redir_out_path;
     int                 redir_out_fd;
 	struct s_command	*next;
+	struct s_command	*prev;
 }				t_command;
 
 typedef struct s_cmd_lst
@@ -75,10 +77,12 @@ int	main(int ac, char **av, char **const	envr);
 void		ft_putstr(char *str);
 int			ft_strlen(char *str);
 int			ft_strcmp(char *s1, char *s2);
-char		*ft_strdup(char *s);
+char		*ft_strjoin(char *s1, char *s2, int frees1, int frees2);
+char		*ft_strdup(char *s, int frees1);
 int		    trim_spaces(char **str);
 char        *ft_strncpy(char *dest, char *src, int len);
-
+char        **ft_split(char *str, char c);
+int         ft_strchr(char *str, char c);
 // norm_alloc_utils
 void	*nmalloc(void **var, int size);
 void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi);
@@ -106,6 +110,9 @@ int		split_pipes(t_command *cmd_lst, char *line);
 int		split_args(t_command *cmd_lst, int i, int y);
 int		expand_dollars(t_lst *env, t_command *cmd_lst);
 int	dollar_ptlc(t_lst *env, char **str, int i);
+
+//exec
+int execute(t_command *cmd_lst, t_lst *env);
 
 //void		iter_through_word(char *str, int *i);		
 int	get_arg(t_command *cmd_lst, int *i, int *y);

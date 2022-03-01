@@ -81,10 +81,12 @@ void	init_env_lst(t_lst *lst, char **envr, int size)
 	while (i < size)
 	{
 		new = create_env_elem(envr[i]);
+        new->prev = current;
 		current->next = new;
 		lst->last = current;
 		current = current->next;
 		i++;
 	}
+    lst->size = i;
 	//current->next = NULL;
 }

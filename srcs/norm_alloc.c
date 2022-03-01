@@ -112,6 +112,6 @@ void    *nmalloc_2d(char ***var, int sizey)
     if (!(*var))
         return (NULL);
     while (++i < sizey)
-   	(*var)[i] = 0; 
+   	    (*var)[i] = 0; 
     return (*var);
 }
