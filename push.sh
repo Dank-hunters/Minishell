@@ -1,3 +1,4 @@
+make fclean
 git pull
 git add *
 git status

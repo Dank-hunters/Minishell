@@ -16,8 +16,8 @@ int is_builtin_and_exec_builtin(t_command *cmd, t_lst *envv)
 {
     if (!ft_strcmp(cmd->command, "cd"))
         cd(envv, cmd->args[1]);
-    else if (!ft_strcmp(cmd->command, "echo"))
-        ;//    echo();
+  //  else if (!ft_strcmp(cmd->command, "echo"))
+    //    ;//    echo();
     else if (!ft_strcmp(cmd->command, "env"))
         env(envv, 0); // revoir
     else if (!ft_strcmp(cmd->command, "unset"))
@@ -65,6 +65,7 @@ int execute(t_command *cmd_lst, t_lst *env)
     int     status;
     char    **path;
     char    **envp;
+    int     joined;
 
     path = ft_split(get_value(env, "PATH"), ':');
     envp = rebuild_envp(env);
@@ -76,30 +77,34 @@ int execute(t_command *cmd_lst, t_lst *env)
         if (is_builtin_and_exec_builtin(cmd_lst, env))
             return (0);
         i = 0;
-        while (1)
+        while (path[i])
         {
+            joined = 0;
            if (!ft_strchr(cmd_lst->command, '/'))
             {
+                joined = 1;
+                path[i] = ft_strjoin(path[i], "/", 0, 0);
                 cmd_lst->command = ft_strjoin(path[i], cmd_lst->command, 0, 0);
-                //free(cmd_lst->command);
             }
            cmd_lst->args[0] = cmd_lst->command;
             if (execve(cmd_lst->args[0], cmd_lst->args, envp) == -1)
             {
-                //if (!dealloc((void **)&cmd_lst->command, 0, ft_strlen(path[i])))
-                  //  return (0);
+                if (joined)
+                    if (!dealloc((void **)&cmd_lst->command, 0, ft_strlen(path[i])))
+                    return (0);
                 i++;
-                free(cmd_lst->args[0]);
             }
+            else 
+                exit (0);
         }
     }
    else // /!\ */
     {
         waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            while (1)
-                if (1)
-                    write(1, "0\n", 2);
+      //  if (WIFEXITED(status))
+        //    while (1)
+          //      if (1)
+            //        write(1, "0\n", 2);
     }
     return (1);
 }

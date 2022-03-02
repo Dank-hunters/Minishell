@@ -38,10 +38,10 @@ int		main(int ac, char **av, char **envp)
 	else
 	{
 		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			while (1)
-				if (lol)
-					write(1, "0\n", 2);
+		//if (WIFEXITED(status))
+		//	while (1)
+		//		if (lol)
+		//			write(1, "0\n", 2);
 	}
 	return 0;
 }

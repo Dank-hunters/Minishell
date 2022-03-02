@@ -1,5 +1,5 @@
 NAME = Minishell
-
+.SILENT:
 SRCS =	main.c \
 		error.c \
 		environment.c \
@@ -20,7 +20,11 @@ SRCS =	main.c \
 
 SRCS_DIR	= srcs
 
+OBJS_DIR	= objs
+
 OBJS = $(SRCS:%.c=%.o)
+
+OBJS_P = $(addprefix $(OBJS_DIR)/, $(OBJS))
 
 INC_DIR = include
 
@@ -39,16 +43,24 @@ CC = gcc
 %.o : 	$(SRCS_DIR)/%.c $(INC)
 	$(CC) $(FS) $(CFLAGS) -c $< -o $@
 
-all:		$(NAME)
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c $(INC)
+			gcc $(CFLAGS) -c $< -o $@
 
-$(NAME) :		$(OBJS)	
-			$(CC) $(FS) $(CFLAGS) $(OBJS) $(RDL) -o $(NAME)
+all:		create_obj_dir $(NAME)
+
+$(NAME) :		$(OBJS_P)	
+			$(CC) $(FS) $(CFLAGS) $(OBJS_P) $(RDL) -o $(NAME)
+
+create_obj_dir :
+				rm -f objs || true
+				mkdir -p objs
 
 clean:
 				rm -f $(OBJS)
 fclean:		
 				rm -f $(OBJS)
 				rm -f $(NAME)
+				rm -rf objs
 
 re:				fclean all
 

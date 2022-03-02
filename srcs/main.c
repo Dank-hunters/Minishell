@@ -53,6 +53,7 @@ int	prompt(char **envr)
 	char 		*prt;
 	t_lst		*data_env;
 	t_cmd_lst	*cmd_ctrl;
+    t_command *cmds;
 	int size;
 
 	size = get_env_size(envr);
@@ -66,8 +67,13 @@ int	prompt(char **envr)
 		if (prt && *prt)
 		{	
 		cmd_ctrl = parse_command(data_env, prt);
-        execute(cmd_ctrl->first, data_env); // boucler ça
-/*		//
+		cmds = cmd_ctrl->first;
+        while (cmds)
+        {
+            execute(cmds, data_env); // boucler ça
+            cmds = cmds->next;
+        }
+            /*		//
 	//	execve(, "ls", envr);
 		if (prt[0] == 'c' && prt[1] == 'd')
             cd(data_env, prt + 3);
