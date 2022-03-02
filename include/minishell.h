@@ -120,4 +120,9 @@ int	get_arg(t_command *cmd_lst, int *i, int *y);
 //error
 void	*error(char *err_msg);
 
+//free
+
+void	free_cmd_lst(t_command *cmd);
+void	free_env_lst(t_env *env);
+
 #endif

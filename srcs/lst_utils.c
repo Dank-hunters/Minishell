@@ -41,3 +41,42 @@ t_command	*create_new_chunk(void)
 	chunk->prev = 0;
 	return (chunk);
 }
+
+void	free_env_lst(t_env *env)
+{
+		t_env *tmp;
+
+		while (env)
+		{
+				tmp = env->next;
+				if (env->key)
+						free(env->key);
+				if (env->value)
+						free(env->value);
+				free(env);
+				env = tmp;
+		}
+}
+
+void	free_cmd_lst(t_command *cmd)
+{
+		int i;
+		t_command *tmp;
+
+		while (cmd)
+		{
+				i = 0;
+				while (cmd->args && cmd->args[i])
+				{
+						free(cmd->args[i]);
+						i++;
+				}
+				free(cmd->args);
+				free(cmd->command);
+				free(cmd->redir_in_path);
+				free(cmd->redir_out_path);
+				tmp = cmd->next;
+				free(cmd);
+				cmd = tmp;
+		}
+}

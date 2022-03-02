@@ -23,7 +23,8 @@ void	sqs(char *line, int *i, char quote)
 
 int	sss(char *line, int *i)
 {
-    (*i)++;
+    if (line[*i] == '<' || line[*i] == '>' || line[*i] == '|')
+        (*i)++;
 	while (line[*i] == ' ')
 		(*i)++;
 	return ((line[*i] != 0));
@@ -78,7 +79,7 @@ int	check_syntax(char *s)
 			    s[i] == '>' || s[i] == '|' || !sss(s, &i) || s[i] == '<' || \
                 s[i] == '|' || s[i] == '>')
 				return (0);	
-		if (s[i] == '|' && s[i + 1] == '|')
+		if (s[i] == '|' || s[i + 1] == '|')
 			return (0);
 		i++;
 	}
@@ -97,7 +98,7 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
 	cmd_ctrl->first = cmd_lst;
 	if (!check_syntax(line))
     {
-        dprintf(1, "PIUte"); 
+        dprintf(1, "syntax ta grand mere \n"); 
 		return (0); // errmsg syntax
     }
     if (!split_pipes(cmd_lst, line) || \

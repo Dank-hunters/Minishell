@@ -48,6 +48,8 @@ int	excess_spaces(char *str)
 	while (str[i] && str[i] == ' ')
 		i++;
 	len_to_trim = i;
+    if (!str[i])
+        return (i);
 	i = ft_strlen(str);
 	while (--i >= 0 && str[i] && str[i] == ' ')
 		len_to_trim++;
