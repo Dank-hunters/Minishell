@@ -21,7 +21,8 @@ char *key(char *str)
 	dest = NULL;
 	while (str[i] && str[i] != '=')
 		i++;
-	dest = malloc(sizeof(char) * (i + 1)); ////securrriteeeeeeeee
+	if (!nmalloc((void **)&dest, i + 1))
+        return (0);
 	i = 0;
 	while (str[i] &&  str[i] != '=')
 	{
@@ -47,7 +48,8 @@ char	*value(char *str)
 		u++;
 	while (str[i])
 		i++;
-	dest = (char *)malloc(sizeof(char) * (i - u + 1));//secuuuuriteeeeeee
+	if (!nmalloc((void **)&dest, i - u + 1))
+        return (0);
 	i = 0;
 	while (str[u])
 	{
@@ -64,7 +66,7 @@ t_lst	*init_env_ctrl(char **envr)
 	t_lst	*lst;
 
 	if (!nmalloc((void **)&lst, sizeof(t_lst)))
-		return (error(MEMALFAILED));
+		return (0);
 	lst->first = create_env_elem(envr[0]);
 	lst->size = 1;
 	return (lst);

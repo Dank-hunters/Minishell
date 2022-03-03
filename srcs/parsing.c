@@ -57,6 +57,19 @@ int	check_quotes(char *line)
 	}
 	return (1);
 }
+int is_guillemet(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i])
+    {
+        if (str[i] == '<' || str[i] == '>')
+            return (0);
+        i++;
+    }
+    return (1);
+}
 
 int	check_syntax(char *s)
 {
@@ -65,6 +78,8 @@ int	check_syntax(char *s)
 	if (!check_quotes(s))
 		return (0);
 	i = 0;
+ //   if (is_guillemet(s) == 1)
+   ////     return (1);
 	while (s[i])
 	{
 		if (s[i] == '\'' || s[i] == '"')
@@ -79,47 +94,32 @@ int	check_syntax(char *s)
 			    s[i] == '>' || s[i] == '|' || !sss(s, &i) || s[i] == '<' || \
                 s[i] == '|' || s[i] == '>')
 				return (0);	
-		if (s[i] == '|' || s[i + 1] == '|')
+		if (s[i] == '|' && s[i + 1] == '|')
 			return (0);
 		i++;
 	}
     return (1);
 }
 
-t_cmd_lst	*parse_command(t_lst *env, char *line)
+int parse_command(t_cmd_lst *cmd_ctrl, t_lst *env, char *line)
 {
 	t_command	*cmd_lst;
-	t_cmd_lst	*cmd_ctrl;
+    
 	(void)env;
 	cmd_lst = create_new_chunk();
-	cmd_ctrl = (t_cmd_lst *)malloc(sizeof(t_cmd_lst));
-	if (!cmd_lst || !cmd_ctrl)
-		return (0); // errmsg alloc failed
-	cmd_ctrl->first = cmd_lst;
+    cmd_ctrl->size = 1;
+	if (!cmd_lst)
+		return ((error(cmd_lst, env->first, errno, 1)));
+    cmd_ctrl->first = cmd_lst;
 	if (!check_syntax(line))
-    {
-        dprintf(1, "syntax ta grand mere \n"); 
-		return (0); // errmsg syntax
-    }
-    if (!split_pipes(cmd_lst, line) || \
+		return (error(cmd_lst, env->first, SYNTAX_ERROR, 0));
+    if (!split_pipes(cmd_ctrl, cmd_lst, line) || \
         !parse_redirs(cmd_lst, env) || \
         !split_args(cmd_ctrl->first, 0, 0))
-    {
-        dprintf(1, "alloc open");
-        return (0); // errmsg alloc failed / open failed
-    }
+		return (error(cmd_lst, env->first, errno, 1));
     if (!expand_dollars(env, cmd_ctrl->first))
-    {
-        dprintf(1, "alloc");
-		return (0); // errmsg alloc failed
-    }
-    while (cmd_lst)
-	{
-		cmd_lst->args[0] = cmd_lst->command;
-		cmd_lst = cmd_lst->next;
-	}	
+		return (error(cmd_lst, env->first, errno, 1));
 	/////////////////////// AFFICHAGE /////////////////////
-	cmd_lst = cmd_ctrl->first;
 	int i;
 	while (cmd_lst)
 	{
@@ -136,5 +136,5 @@ t_cmd_lst	*parse_command(t_lst *env, char *line)
         cmd_lst = cmd_lst->next;
 	}
 
-	return (cmd_ctrl);
+	return (1);
 }

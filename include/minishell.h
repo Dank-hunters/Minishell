@@ -16,12 +16,13 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <string.h>
 # include <fcntl.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define MEMALFAILED "Error : memory allocation failed\n"
-# define UNCLOSEDQUOTES "Error : the command you typed contains unclosed quotes\n"
+# define SYNTAX_ERROR 30000
 
 typedef struct s_env
 {
@@ -101,12 +102,13 @@ void	env(t_lst *data, int ntm);
 void	unset(t_lst *data, char *key);
 void	expor(t_lst *data, char *path);
 void	cd(t_lst *data, char *path);
+void    exit_minishell(t_command *cmd_lst, t_env *env, char **args, int ret);
 
 //parsing
 t_command		*create_new_chunk(void);
-t_cmd_lst		*parse_command(t_lst *env, char *line);
+int		parse_command(t_cmd_lst *cmd_ctrl, t_lst *env, char *line);
 int     		parse_redirs(t_command *cmd_lst, t_lst *env);
-int		split_pipes(t_command *cmd_lst, char *line);
+int		split_pipes(t_cmd_lst *cmd_ctrl, t_command *cmd_lst, char *line);
 int		split_args(t_command *cmd_lst, int i, int y);
 int		expand_dollars(t_lst *env, t_command *cmd_lst);
 int	dollar_ptlc(t_lst *env, char **str, int i);
@@ -118,7 +120,7 @@ int execute(t_command *cmd_lst, t_lst *env);
 int	get_arg(t_command *cmd_lst, int *i, int *y);
 
 //error
-void	*error(char *err_msg);
+int	error(t_command *cmd_lst, t_env *env, int errnum, int exit);
 
 //free
 

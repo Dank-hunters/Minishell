@@ -16,7 +16,9 @@ t_env	*create_env_elem(char *path)
 {
 	t_env	*new;
 
-	new = (t_env *)malloc(sizeof(t_env)); /// securitteeeee
+	new = (t_env *)malloc(sizeof(t_env));
+    if (!new)
+        return (0);
 	new->key = key(path);
 	new->value = value(path);
 	new->set = 1;

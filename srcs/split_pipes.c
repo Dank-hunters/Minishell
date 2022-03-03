@@ -44,7 +44,7 @@ int	get_command_chunk(t_command *cmd_lst, char *line, int *i)
 	return (1);
 }
 
-int	split_pipes(t_command *cmd_lst, char *line)
+int	split_pipes(t_cmd_lst *cmd_ctrl, t_command *cmd_lst, char *line)
 {
 	int	i;
 
@@ -55,6 +55,7 @@ int	split_pipes(t_command *cmd_lst, char *line)
 			return (0);
 		if (!get_command_chunk(cmd_lst, line + i, &i))
 			return (0);
+        cmd_ctrl->size++;
 		if (line[i])
 		{
 			cmd_lst->next = create_new_chunk();

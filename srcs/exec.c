@@ -16,7 +16,7 @@ int	exec_fork(t_command *cmd_lst, char **path, char **envp)
 {
 	int	 i;
 	int	 joined;
-
+    (void)env;
 	i = 0;
 	while (path[i] && (cmd_lst->command)[0])
 	{
@@ -36,9 +36,9 @@ int	exec_fork(t_command *cmd_lst, char **path, char **envp)
 			i++;
 		}
 		else
-			break;
+			exit(0);
 	}
-	return (0);
+	exit(0);
 }
 
 int is_builtin_and_exec_builtin(t_command *cmd, t_lst *envv)
@@ -90,7 +90,7 @@ char **rebuild_envp(t_lst *env)
 int execute(t_command *cmd_lst, t_lst *env)
 {
 	int	 pid;
-	int	 status;
+//	int	 status;
 	char	**path;
 	char	**envp;
 
@@ -101,11 +101,6 @@ int execute(t_command *cmd_lst, t_lst *env)
 	pid = fork();
 	if (pid == 0 && !is_builtin_and_exec_builtin(cmd_lst, env))
 		exec_fork(cmd_lst, path, envp);
-	else if (pid != 0)// /!\ */
-	{
-		waitpid(pid, &status, 0);
-		// if (WIFEXITED(status))
-
-	}
+    free(path);
 	return (1);
 }

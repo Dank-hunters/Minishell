@@ -28,7 +28,8 @@ char	*new_pwd(char *value, char *path)
     u = 0;
     i = ft_strlen(value);
     i += ft_strlen(path);
-    dest = malloc(sizeof(char) * i + 2);
+    if (!(nmalloc((void **)&dest, i + 2)))
+        return (0);
     while(value[u])
     {
         dest[u] = value[u];

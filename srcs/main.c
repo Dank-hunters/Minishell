@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/16 18:56:39 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/03 17:02:26 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ void	aff(t_lst *data)
 
 int	prompt(char **envr)
 {
+        int         i;
 		char 		*prt;
 		t_lst		*data_env;
-		t_cmd_lst	*cmd_ctrl;
+		t_cmd_lst	cmd_ctrl;
 		t_command *cmds;
 		int size;
 
+        i = -1;
 		size = get_env_size(envr);
 		prt = NULL;
 		data_env = init_env_ctrl(envr);
@@ -66,13 +68,21 @@ int	prompt(char **envr)
 				add_history(prt);
 				if (prt && *prt)
 				{	
-						cmd_ctrl = parse_command(data_env, prt);
-						cmds = cmd_ctrl->first;
+						if (!parse_command(&cmd_ctrl, data_env, prt))
+                            continue;
+						cmds = cmd_ctrl.first;
 						while (cmds)
 						{
+                                i++;
 								execute(cmds, data_env);
 								cmds = cmds->next;
 						}
+                     /*   while (--i)
+                        {
+                         i += -1;;   
+                        }*/
+	                    //waitpid(pids[i], &status, 0);
+		                // if (WIFEXITED(status))
 				}
 		}
 		free(prt);
