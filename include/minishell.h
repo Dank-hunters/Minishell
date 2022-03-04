@@ -24,6 +24,8 @@
 
 # define SYNTAX_ERROR 30000
 
+int pids[2];
+
 typedef struct s_env
 {
 	char			*key;
@@ -44,6 +46,7 @@ typedef struct s_command
 	int					redir_out_type;
 	char				*redir_out_path;
     int                 redir_out_fd;
+	int					fd[2];
 	struct s_command	*next;
 	struct s_command	*prev;
 }				t_command;

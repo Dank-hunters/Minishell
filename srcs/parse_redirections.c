@@ -119,8 +119,7 @@ int parse_redirs(t_command *cmd_lst, t_lst *env)
         if (!parse_guillemets_in(cmd_lst, env, -1) || \
             !parse_guillemets_out(cmd_lst, env, -1))
             return (0);
-        dprintf(1, "|%s|\n\n", cmd_lst->command);
-        // dup des trucs
+
 
         cmd_lst = cmd_lst->next;
     }
