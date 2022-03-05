@@ -23,21 +23,25 @@ int main(int ac, char **av, char **envp)
 	{
 	    if (!i)
 	    {
-		dup2(STDOUT_FILENO, fd[0]);
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
 	    }
 	    else
 	    {
-		dup2(STDIN_FILENO, fd[1]);
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
 	    }
-	    close(fd[0]);
-	    close(fd[1]);
 	    execve(cmd[i], cmd + i, envp);
+	    if (i)
+	    {
+		
+	    }
 	    exit(0);
 	    dprintf(1, "lol");
 	}
 	i += 2;
     }
-    close (fd[0]);
-    close(fd[1]);
     return 0;
 }

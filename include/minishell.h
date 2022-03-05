@@ -25,7 +25,7 @@
 
 # define SYNTAX_ERROR 30000
 
-extern int	pid;
+extern int	lastcmdretvalue;
 
 typedef struct s_env
 {
@@ -118,7 +118,7 @@ int		expand_dollars(t_lst *env, t_command *cmd_lst);
 int	dollar_ptlc(t_lst *env, char **str, int i);
 
 //exec
-int execute(t_command *cmd_lst, t_lst *env);
+int execute(t_command *cmd_lst, char **path, char **envp, int *thefinalpid);
 
 //void		iter_through_word(char *str, int *i);		
 int	get_arg(t_command *cmd_lst, int *i, int *y);

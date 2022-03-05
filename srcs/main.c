@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int pid = 0;
+int lastcmdretvalue = 0;
 
 int	is_closed(char *str)
 {
@@ -47,11 +47,41 @@ void	aff(t_lst *data)
     }
 }
 
+char **rebuild_envp(t_lst *env)
+{
+    int	 i;
+    int	 len;
+    char **envp;
+    t_env   *environment;
+
+    if (!(nmalloc_2d(&envp, env->size + 1)))
+	return (0);
+    i = 0;
+    environment = env->first;
+    while (environment)
+    {
+	len = ft_strlen(environment->key) + ft_strlen(environment->value) + 1;
+	if (!nmalloc((void **)&envp[i], len + 1))
+	    return (0);
+	len = ft_strlen(environment->key);
+	ft_strncpy(envp[i], environment->key, len);
+	envp[i][len] = '=';
+	ft_strncpy(envp[i] + len + 1, environment->value, \
+		ft_strlen(environment->value));
+	environment = environment->next;
+	i++;
+    }
+    return (envp);
+}
+
 int	prompt(char **envr)
 {
+    int			thefinalpid;
     int			status;
     char 		*prt;
     t_lst		*data_env;
+    char	**path;
+    char	**envp;
     t_cmd_lst	cmd_ctrl;
     t_command *cmds;
     int size;
@@ -69,14 +99,20 @@ int	prompt(char **envr)
 	    if (!parse_command(&cmd_ctrl, data_env, prt))
 		continue;
 	    cmds = cmd_ctrl.first;
+	    envp = rebuild_envp(data_env);
+	    path = ft_split(get_value(data_env, "PATH"), ':');
+	    if (!path || !envp)
+		return (0);
 	    while (cmds)
 	    {
-		if (!execute(cmds, data_env))
+		if (!execute(cmds, path, envp, &thefinalpid))
 		    return (error(cmd_ctrl.first, data_env->first, errno, 1));
 		cmds = cmds->next;
 	    }
-	    waitpid(pid, &status, 0);
+	    waitpid(thefinalpid, &status, 0);
 	    // if (WIFEXITED(status))
+	    free(envp);
+	    free(path);
 	}
     }
     free(prt);

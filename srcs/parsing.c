@@ -57,19 +57,6 @@ int	check_quotes(char *line)
     }
     return (1);
 }
-int is_guillemet(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-    {
-	if (str[i] == '<' || str[i] == '>')
-	    return (0);
-	i++;
-    }
-    return (1);
-}
 
 int	check_syntax(char *s)
 {
@@ -78,8 +65,6 @@ int	check_syntax(char *s)
     if (!check_quotes(s))
 	return (0);
     i = 0;
-    //   if (is_guillemet(s) == 1)
-    ////     return (1);
     while (s[i])
     {
 	if (s[i] == '\'' || s[i] == '"')
@@ -94,7 +79,7 @@ int	check_syntax(char *s)
 		    s[i] == '>' || s[i] == '|' || !sss(s, &i) || s[i] == '<' || \
 		    s[i] == '|' || s[i] == '>')
 		return (0);	
-	if (s[i] == '|' && s[i + 1] == '|')
+	if (s[i] == '|' && (s[i + 1] == '|' || !sss(s, &i)))
 	    return (0);
 	i++;
     }
