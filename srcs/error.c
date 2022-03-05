@@ -14,15 +14,15 @@
 
 int	error(t_command *cmd_lst, t_env *env, int errnum, int exit)
 {
-	free_cmd_lst(cmd_lst);
+    free_cmd_lst(cmd_lst);
     cmd_lst = 0;
     if (errnum < 30000)
-        perror(strerror(errnum));
+	perror(strerror(errnum));
     else if (errnum == 30000)
-        dprintf(2, "Syntax error\n");
+	dprintf(2, "Syntax error\n");
     if (exit)
-        exit_minishell(cmd_lst, env, 0, 1);
-	return (0);
+	exit_minishell(cmd_lst, env, 0, 1);
+    return (0);
 }
 
 void    exit_minishell(t_command *cmd_lst, t_env *env, char **args, int ret)

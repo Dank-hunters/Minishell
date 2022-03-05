@@ -14,31 +14,30 @@
 
 int	dup_des_trucs(t_command *cmd)
 {
-    if ((cmd->next || cmd->prev) && pipe(cmd->fd) == -1)
-	return (0);
     if (!cmd->prev)
     {
-	close(cmd->fd[1]);
-	dprintf(1, "lel\n");
-	if (cmd->next && dup2(cmd->fd[0], STDOUT_FILENO == -1))
+	if (cmd->next && dup2(cmd->fd[1], STDOUT_FILENO) == -1)
 	    return (0);
-	else
-	    close(cmd->fd[0]);
     }
     else if (cmd->next)
     {
-	if (dup2(cmd->fd[1], STDIN_FILENO) == -1 || \
-		dup2(cmd->fd[0], STDOUT_FILENO) == -1)
-	dprintf(1, "lul\n");
+	if (dup2(cmd->prev->fd[0], STDIN_FILENO) == -1 || \
+		dup2(cmd->fd[1], STDOUT_FILENO) == -1)
 	    return (0);
+	close(cmd->prev->fd[0]);
+	close(cmd->prev->fd[1]);
     }
     else
     {
-	if (dup2(cmd->prev->fd[1], STDIN_FILENO) == -1)
+	if (dup2(cmd->prev->fd[0], STDIN_FILENO) == -1)
 	    return (0);
-	dprintf(1, "lol\n");
-	close(cmd->fd[0]);
+	close(cmd->prev->fd[0]);
+	close(cmd->prev->fd[1]);
     }
+    if (cmd->prev || cmd->next)
+      close(cmd->fd[0]);
+    if (cmd->prev || cmd->next)
+      close(cmd->fd[1]);
     return (1);
 }
 
@@ -46,7 +45,7 @@ int	exec_fork(t_command *cmd_lst, char **path, char **envp)
 {
     int	 i;
     int	 joined;
-    (void)env;
+
     i = 0;
     while (path[i] && (cmd_lst->command)[0])
     {
@@ -64,12 +63,6 @@ int	exec_fork(t_command *cmd_lst, char **path, char **envp)
 			ft_strlen(path[i])))
 		return (0);
 	    i++;
-	}
-	else
-	{
-	    if (cmd_lst->prev && close(cmd_lst->prev->fd[1]))
-		return (0);
-	    exit(0);
 	}
     }
     exit(0);
@@ -130,8 +123,10 @@ int execute(t_command *cmd, t_lst *env)
     envp = rebuild_envp(env);
     if (!path || !envp)
 	return (0); // errmsg alloc failed
-    pids[0] = fork();
-    if (pids[0] == 0 && !is_builtin_and_exec_builtin(cmd, env))
+    if ((cmd->next || cmd->prev) && pipe(cmd->fd) == -1)
+	return (0);
+    pid = fork();
+    if (pid == 0 && !is_builtin_and_exec_builtin(cmd, env))
     {
 	if (!dup_des_trucs(cmd))
 	    return (0);
@@ -141,6 +136,7 @@ int execute(t_command *cmd, t_lst *env)
 	    return (0);
 	if (!exec_fork(cmd, path, envp))
 	    return (0);
+	dprintf(1, "asdf");
     }
     free(path);
     return (1);

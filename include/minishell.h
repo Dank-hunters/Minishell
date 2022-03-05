@@ -19,12 +19,13 @@
 # include <string.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
 # define SYNTAX_ERROR 30000
 
-int pids[2];
+extern int	pid;
 
 typedef struct s_env
 {

@@ -12,11 +12,10 @@
 
 #include <minishell.h>
 
+int pid = 0;
+
 int	is_closed(char *str)
 {
-    int	i;
-
-    i = 0;
     if (str == NULL)
 	return (1);
     if (str[0] != 'e')
@@ -76,7 +75,7 @@ int	prompt(char **envr)
 		    return (error(cmd_ctrl.first, data_env->first, errno, 1));
 		cmds = cmds->next;
 	    }
-	    waitpid(pids[0], &status, 0);
+	    waitpid(pid, &status, 0);
 	    // if (WIFEXITED(status))
 	}
     }
