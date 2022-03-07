@@ -77,8 +77,9 @@ t_env	*get_key(t_lst *data, char *key);
 
 //main	
 int	main(int ac, char **av, char **const	envr);
-
+char	**rebuild_envp(t_lst *env);
 //utils
+void		ft_putstr_fd(int fd, char *str);
 void		ft_putstr(char *str);
 int			ft_strlen(char *str);
 int			ft_strcmp(char *s1, char *s2);
@@ -103,6 +104,7 @@ void	init_env_lst(t_lst *lst, char **envr, int size);
 //
 
 void	env(t_lst *data, int ntm);
+void	echo(int fd, char **args);
 void	unset(t_lst *data, char *key);
 void	expor(t_lst *data, char *path);
 void	cd(t_lst *data, char *path);
@@ -118,7 +120,7 @@ int		expand_dollars(t_lst *env, t_command *cmd_lst);
 int	dollar_ptlc(t_lst *env, char **str, int i);
 
 //exec
-int execute(t_command *cmd_lst, char **path, char **envp, int *thefinalpid);
+int execute(t_command *cmd_lst, char **path, t_lst *envp, int *thefinalpid);
 
 //void		iter_through_word(char *str, int *i);		
 int	get_arg(t_command *cmd_lst, int *i, int *y);

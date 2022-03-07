@@ -112,8 +112,6 @@ int parse_command(t_cmd_lst *cmd_ctrl, t_lst *env, char *line)
 	dprintf(1, "cmd : |%s|\n", cmd_lst->command);
 	dprintf(1, "redir out :|%s|\n",cmd_lst->redir_out_path);
 	dprintf(1, "redir in :|%s|\n",cmd_lst->redir_in_path);
-	//		dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
-	//		dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
 	while(cmd_lst->args[i]) 
 	{
 	    dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);

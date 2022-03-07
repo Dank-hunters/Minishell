@@ -56,24 +56,32 @@ int	exec_fork(t_command *cmd_lst, char **path, char **envp)
 	    cmd_lst->command = ft_strjoin(path[i], cmd_lst->command, 0, 0);
 	    joined = 1;
 	}
-	cmd_lst->args[0] = cmd_lst->command;
-	if (execve(cmd_lst->args[0], cmd_lst->args, envp) == -1)
+	cmd_lst->args[0] = cmd_lst->command + (ft_strlen(path[i]) * joined);
+	dprintf(1, "%s\n", cmd_lst->args[0]);
+	if (execve(cmd_lst->command, cmd_lst->args, envp) == -1)
 	{
 	    if (joined && !dealloc((void **)&cmd_lst->command, 0, \
 			ft_strlen(path[i])))
 		return (0);
 	    i++;
 	}
+	else
+	    return (1);
     }
-    exit(0);
+    return (0);
 }
 
 int is_builtin_and_exec_builtin(t_command *cmd, t_lst *envv)
 {
     if (!ft_strcmp(cmd->command, "cd"))
 	cd(envv, cmd->args[1]);
-    //  else if (!ft_strcmp(cmd->command, "echo"))
-    //	;//	echo();
+    else if (!ft_strcmp(cmd->command, "echo"))
+    {
+	if (cmd->redir_out_fd)
+	    echo(1, cmd->args);
+	else
+	    echo(cmd->redir_out_fd, cmd->args);
+    }
     else if (!ft_strcmp(cmd->command, "env"))
 	env(envv, 0); // revoir
     else if (!ft_strcmp(cmd->command, "unset"))
@@ -87,15 +95,8 @@ int is_builtin_and_exec_builtin(t_command *cmd, t_lst *envv)
     return (1);
 }
 
-int execute(t_command *cmd, char **path, char **envp, int *thefinalpid)
+int	pre_fork(t_command *cmd, char **path, char **envp)
 {
-    int		pid;
-
-    if ((cmd->next || cmd->prev) && pipe(cmd->fd) == -1)
-	return (0);
-    pid = fork();
-    if (pid == 0 && !is_builtin_and_exec_builtin(cmd, env))
-    {
 	if (!dup_des_trucs(cmd))
 	    return (0);
 	if (cmd->redir_in_fd && dup2(cmd->redir_in_fd, STDIN_FILENO) == -1 && close(cmd->redir_in_fd) )
@@ -103,6 +104,23 @@ int execute(t_command *cmd, char **path, char **envp, int *thefinalpid)
 	if (cmd->redir_out_fd && dup2(cmd->redir_out_fd, STDOUT_FILENO) == -1  && close(cmd->redir_out_fd))
 	    return (0);
 	if (!exec_fork(cmd, path, envp))
+	    perror(strerror(errno));
+	exit(0);
+}
+
+int execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
+{
+    int		i;
+    int		pid;
+    char    **envp;
+    
+    envp = rebuild_envp(env);
+    if (!envp || ((cmd->next || cmd->prev) && pipe(cmd->fd) == -1))
+	return (0);
+    pid = fork();
+    if (pid == 0 && !is_builtin_and_exec_builtin(cmd, env))
+    {
+	if (pre_fork(cmd, path, envp) == 0)
 	    return (0);
     }
     else if (!cmd->next)
@@ -111,6 +129,9 @@ int execute(t_command *cmd, char **path, char **envp, int *thefinalpid)
 	close(cmd->fd[1]);
     if (cmd->prev)
 	close(cmd->prev->fd[0]);
-    free(path);
+    i = 0;
+    while (envp[i])
+	free(envp[i++]);
+    free(envp);
     return (1);
 }

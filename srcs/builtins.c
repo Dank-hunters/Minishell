@@ -11,13 +11,29 @@
 /* ************************************************************************** */
 
 #include <minishell.h>
-/*
-   void	echo(char *str, int fd, int i)// i = indice pour le -n, si 0 il es pas active
-   {
-   if (i == 0)
-   ft_putstr_fd(fd, str);
-   }
-   */
+
+void	echo(int fd, char **args)
+{
+    int i;
+    int	tirayn;
+
+    i = 1;
+    tirayn = 0;
+    while (args[i] && !strcmp(args[i], "-n"))
+    {
+	tirayn = 1;
+	i++;
+    }
+    while (args[i])
+    {
+	ft_putstr_fd(fd, args[i]);
+	if (args[i + 1])
+	    ft_putstr_fd(fd, " ");
+	i++;
+    }
+    if (!tirayn)
+	ft_putstr_fd(fd, "\n");
+}
 
 char	*new_pwd(char *value, char *path)
 {
@@ -29,21 +45,21 @@ char	*new_pwd(char *value, char *path)
     i = ft_strlen(value);
     i += ft_strlen(path);
     if (!(nmalloc((void **)&dest, i + 2)))
-        return (0);
+	return (0);
     while(value[u])
     {
-        dest[u] = value[u];
-        u++;
+	dest[u] = value[u];
+	u++;
     }
     dest[u] = '/';
     u++;
     i = 0;
     while (path[i])
     {
-        dest[u] = path[i];
-        u++;
-        i++;
-        dest[u] = '\0';
+	dest[u] = path[i];
+	u++;
+	i++;
+	dest[u] = '\0';
     }
     return (dest);
 }
@@ -54,8 +70,8 @@ void	cd(t_lst *data, char *path)
 
     if (chdir(path) == -1)
     {
-        dprintf(1, "mauvais dir\n\n\n");
-        return ;
+	dprintf(1, "mauvais dir\n\n\n");
+	return ;
     }
 
     env = get_key(data, "OLDPWD");
@@ -81,12 +97,12 @@ void	unset(t_lst *data, char *key) // reparer args multiples
     env = get_key(data, key);
     if (env)
     {
-        free(env->key);
-        free(env->value);
-        if (env->prev)
-            (env->prev)->next = env->next;
-        if (env->next)
-            (env->next)->prev = env->prev;
+	free(env->key);
+	free(env->value);
+	if (env->prev)
+	    (env->prev)->next = env->next;
+	if (env->next)
+	    (env->next)->prev = env->prev;
     }
     free(env);
 }
@@ -100,21 +116,19 @@ void	env(t_lst *data, int ntm)
     env = data->first;
     if (ntm == 0)
     {
-        while (env != NULL)
-        {
-            if (env->set == 1)
-            {
-                ft_putstr(env->key);
-                ft_putstr("=");
-                ft_putstr(env->value);
-                ft_putstr("---");
-                dprintf(1, "set :%d ", env->set);
-                ft_putstr("\n");
-            }
-            env = env->next;
-        }
+	while (env != NULL)
+	{
+	    if (env->set == 1)
+	    {
+		ft_putstr(env->key);
+		ft_putstr("=");
+		ft_putstr(env->value);
+		ft_putstr("---");
+		dprintf(1, "set :%d ", env->set);
+		ft_putstr("\n");
+	    }
+	    env = env->next;
+	}
     }
-    else
-        ft_putstr("Sorry env no need arg\n");
 
 }

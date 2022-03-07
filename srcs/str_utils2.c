@@ -63,3 +63,12 @@ char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
 	free(s2);
     return (nstr);
 }
+
+void	ft_putstr_fd(int fd, char *str)
+{
+    while (*str)
+    {
+	write(fd, str++, 1);
+    }
+
+}

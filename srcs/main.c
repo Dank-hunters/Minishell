@@ -76,12 +76,12 @@ char **rebuild_envp(t_lst *env)
 
 int	prompt(char **envr)
 {
+    int			i;
     int			thefinalpid;
     int			status;
     char 		*prt;
     t_lst		*data_env;
     char	**path;
-    char	**envp;
     t_cmd_lst	cmd_ctrl;
     t_command *cmds;
     int size;
@@ -99,20 +99,19 @@ int	prompt(char **envr)
 	    if (!parse_command(&cmd_ctrl, data_env, prt))
 		continue;
 	    cmds = cmd_ctrl.first;
-	    envp = rebuild_envp(data_env);
-	    path = ft_split(get_value(data_env, "PATH"), ':');
-	    if (!path || !envp)
-		return (0);
 	    while (cmds)
 	    {
-		if (!execute(cmds, path, envp, &thefinalpid))
+		path = ft_split(get_value(data_env, "PATH"), ':');
+		if (!path || !execute(cmds, path, data_env, &thefinalpid))
 		    return (error(cmd_ctrl.first, data_env->first, errno, 1));
+		i = 0;
+		 while (path[i])
+		    free(path[i++]);
+		free(path);
 		cmds = cmds->next;
 	    }
 	    waitpid(thefinalpid, &status, 0);
 	    // if (WIFEXITED(status))
-	    free(envp);
-	    free(path);
 	}
     }
     free(prt);
