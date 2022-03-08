@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-void	echo(int fd, char **args)
+int	echo(int fd, char **args)
 {
     int i;
     int	tirayn;
@@ -33,6 +33,7 @@ void	echo(int fd, char **args)
     }
     if (!tirayn)
 	ft_putstr_fd(fd, "\n");
+    return (1);
 }
 
 char	*new_pwd(char *value, char *path)
@@ -63,7 +64,8 @@ char	*new_pwd(char *value, char *path)
     }
     return (dest);
 }
-void	cd(t_lst *data, char *path)
+
+int	cd(t_lst *data, char *path)
 {
     t_env *env;
     t_env *tmp;
@@ -71,26 +73,27 @@ void	cd(t_lst *data, char *path)
     if (chdir(path) == -1)
     {
 	dprintf(1, "mauvais dir\n\n\n");
-	return ;
+	return (0);
     }
-
     env = get_key(data, "OLDPWD");
     tmp = get_key(data, "PWD");
     env->value = tmp->value;
     tmp->value = new_pwd(tmp->value, path);
+    return (1);
 }
 
 //void	pwd()
 
 
-void expor(t_lst *data, char *path) // reparrer args multiples
+int expor(t_lst *data, char *path) // reparrer args multiples
 {
     data->last->next = create_env_elem(path);
     data->last = data->last->next;
+    return (1);
 }
 
 
-void	unset(t_lst *data, char *key) // reparer args multiples
+int	unset(t_lst *data, char *key) // reparer args multiples
 {
     t_env	*env;
 
@@ -105,11 +108,12 @@ void	unset(t_lst *data, char *key) // reparer args multiples
 	    (env->next)->prev = env->prev;
     }
     free(env);
+    return (1);
 }
 
 
 
-void	env(t_lst *data, int ntm)
+int	env(t_lst *data, int ntm)
 {
     t_env	*env;
 
@@ -130,5 +134,5 @@ void	env(t_lst *data, int ntm)
 	    env = env->next;
 	}
     }
-
+    return (1);
 }

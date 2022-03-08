@@ -39,6 +39,8 @@ t_command	*create_new_chunk(void)
     chunk->redir_in_path = 0;
     chunk->redir_out_type = 0;
     chunk->redir_out_path = 0;
+    chunk->redir_in_fd = 0;
+    chunk->redir_out_fd = 0;
     chunk->fd[0] = 0;
     chunk->fd[1] = 0;
     chunk->next = 0;
@@ -69,7 +71,7 @@ void	free_cmd_lst(t_command *cmd)
 
     while (cmd)
     {
-	i = 0;
+	i = 1;
 	while (cmd->args && cmd->args[i])
 	{
 	    free(cmd->args[i]);

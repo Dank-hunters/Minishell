@@ -29,41 +29,41 @@ extern int	lastcmdretvalue;
 
 typedef struct s_env
 {
-	char			*key;
-	char			*value;
-	int				set ;
-	struct s_env	*next;
-	struct s_env	*prev;
+    char			*key;
+    char			*value;
+    int				set ;
+    struct s_env	*next;
+    struct s_env	*prev;
 
 }				t_env;
 
 typedef struct s_command
 {
-	char				*command;
-	char				**args;
-	int					redir_in_type;
-	char				*redir_in_path;
+    char		*command;
+    char		**args;
+    int			redir_in_type;
+    char		*redir_in_path;
     int                 redir_in_fd;
-	int					redir_out_type;
-	char				*redir_out_path;
+    int			redir_out_type;
+    char		*redir_out_path;
     int                 redir_out_fd;
-	int					fd[2];
-	struct s_command	*next;
-	struct s_command	*prev;
+    int			fd[2];
+    struct s_command	*next;
+    struct s_command	*prev;
 }				t_command;
 
 typedef struct s_cmd_lst
 {
-	t_command	*first;
-	t_command	*last;
-	int		size;
+    t_command	*first;
+    t_command	*last;
+    int		size;
 }			t_cmd_lst;
 
 typedef struct s_lst
 {
-	t_env	*first;
-	t_env	*last;
-	int		size;
+    t_env	*first;
+    t_env	*last;
+    int		size;
 }				t_lst;
 
 //env
@@ -103,11 +103,11 @@ void	init_env_lst(t_lst *lst, char **envr, int size);
 //builtinS
 //
 
-void	env(t_lst *data, int ntm);
-void	echo(int fd, char **args);
-void	unset(t_lst *data, char *key);
-void	expor(t_lst *data, char *path);
-void	cd(t_lst *data, char *path);
+int	env(t_lst *data, int ntm);
+int	echo(int fd, char **args);
+int	unset(t_lst *data, char *key);
+int	expor(t_lst *data, char *path);
+int	cd(t_lst *data, char *path);
 void    exit_minishell(t_command *cmd_lst, t_env *env, char **args, int ret);
 
 //parsing

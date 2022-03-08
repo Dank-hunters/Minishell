@@ -55,10 +55,10 @@ char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
     len = 0;
     while (*s1)
 	nstr[len++] = *(s1++);
+    if (frees1)
+	free(s1 - len);
     while (*s2)
 	nstr[len++] = *(s2++);
-    if (frees1)
-	free(s1);
     if (frees2)
 	free(s2);
     return (nstr);

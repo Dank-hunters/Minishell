@@ -35,18 +35,6 @@ int	is_closed(char *str)
     }
 }
 
-void	aff(t_lst *data)
-{
-    t_env *env;
-
-    env = data->first;
-    while (env != NULL)
-    {
-	dprintf(1, "%s=%s --- %i\n", env->key, env->value, env->set);
-	env = env->next;
-    }
-}
-
 char **rebuild_envp(t_lst *env)
 {
     int	 i;
@@ -90,7 +78,7 @@ int	prompt(char **envr)
     prt = NULL;
     data_env = init_env_ctrl(envr);
     init_env_lst(data_env, envr, size);
-    while (is_closed(prt) == 1)
+    while (1)
     {
 	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
 	add_history(prt);
@@ -102,15 +90,20 @@ int	prompt(char **envr)
 	    while (cmds)
 	    {
 		path = ft_split(get_value(data_env, "PATH"), ':');
-		if (!path || !execute(cmds, path, data_env, &thefinalpid))
+		if (!path)
 		    return (error(cmd_ctrl.first, data_env->first, errno, 1));
+		i = -1;
+		while (path[++i])
+		    path[i] = ft_strjoin(path[i], "/", 1, 0);
+		execute(cmds, path, data_env, &thefinalpid);
 		i = 0;
 		 while (path[i])
 		    free(path[i++]);
 		free(path);
 		cmds = cmds->next;
 	    }
-	    waitpid(thefinalpid, &status, 0);
+	    if (thefinalpid != -1)
+		waitpid(thefinalpid, &status, 0);
 	    // if (WIFEXITED(status))
 	}
     }
@@ -121,8 +114,11 @@ int	prompt(char **envr)
 int main(int ac, char **av, char **const envr)
 {
     (void)av;
-    int i = 0;
     if (ac == 1)
+    {
 	prompt(envr);
-    return (i);
+    }
+    else
+	return (error(0, 0, 30001, 1));
+    return (0);
 }
