@@ -106,6 +106,7 @@ int	prompt(char **envr)
 		waitpid(thefinalpid, &status, 0);
 	    // if (WIFEXITED(status))
 	}
+	free_cmd_lst(cmd_ctrl.first);
     }
     free(prt);
     return(0);

@@ -108,7 +108,7 @@ int	echo(int fd, char **args);
 int	unset(t_lst *data, char *key);
 int	expor(t_lst *data, char *path);
 int	cd(t_lst *data, char *path);
-void    exit_minishell(t_command *cmd_lst, t_env *env, char **args, int ret);
+void    exiit(t_command *cmd_lst, t_env *env, char **args, int ret);
 
 //parsing
 t_command		*create_new_chunk(void);

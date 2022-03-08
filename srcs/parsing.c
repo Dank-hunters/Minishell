@@ -104,6 +104,11 @@ int parse_command(t_cmd_lst *cmd_ctrl, t_lst *env, char *line)
 	return (error(cmd_lst, env->first, errno, 1));
     if (!expand_dollars(env, cmd_ctrl->first))
 	return (error(cmd_lst, env->first, errno, 1));
+    while (cmd_lst)
+    {
+	cmd_lst->args[0] = cmd_lst->command;
+	cmd_lst = cmd_lst->next;
+    }
     /////////////////////// AFFICHAGE /////////////////////
     int i;
     while (cmd_lst)

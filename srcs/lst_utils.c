@@ -81,6 +81,14 @@ void	free_cmd_lst(t_command *cmd)
 	free(cmd->command);
 	free(cmd->redir_in_path);
 	free(cmd->redir_out_path);
+	if (cmd->redir_out_fd)
+	    close(cmd->redir_out_fd);
+	if (cmd->redir_in_fd)
+	    close(cmd->redir_in_fd);
+	if (cmd->fd[0])
+	    close(cmd->fd[0]);
+	if (cmd->fd[1])
+	    close(cmd->fd[1]);
 	tmp = cmd->next;
 	free(cmd);
 	cmd = tmp;

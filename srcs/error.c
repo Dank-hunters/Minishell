@@ -16,8 +16,10 @@ int	error(t_command *cmd_lst, t_env *env, int errnum, int exit)
 {
     if (errnum == 2)
     {
-	if (cmd_lst->args[0])
+	if (cmd_lst->args[0] && !ft_strchr(cmd_lst->args[0], '/'))
 	    dprintf(2, "Minishell-4.2: command not found: %s\n", cmd_lst->args[0]);
+	else if (cmd_lst->args[0])
+	    dprintf(2, "Minishell-4.2: %s: No such file or directory\n", cmd_lst->args[0]);
 	else if (cmd_lst->redir_out_path && !cmd_lst->redir_out_fd)
 	    dprintf(2, "%s: could not open file\n", cmd_lst->redir_out_path);
 	else if (cmd_lst->redir_in_path && !cmd_lst->redir_in_fd)
@@ -30,16 +32,11 @@ int	error(t_command *cmd_lst, t_env *env, int errnum, int exit)
     else if (errnum == 30001)
 	dprintf(2, "Minishell does not take args\n");
     if (exit)
-	exit_minishell(cmd_lst, env, 0, 1);
-    else
-    {
-	free_cmd_lst(cmd_lst);
-	cmd_lst = 0;
-    }
+	exiit(cmd_lst, env, 0, 1);
     return (0);
 }
 
-void    exit_minishell(t_command *cmd_lst, t_env *env, char **args, int ret)
+void    exiit(t_command *cmd_lst, t_env *env, char **args, int ret)
 {
     (void)args;
     free_cmd_lst(cmd_lst);
