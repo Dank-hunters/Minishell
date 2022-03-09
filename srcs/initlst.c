@@ -6,25 +6,25 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 17:57:30 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/24 17:49:37 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/03/09 16:19:46 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-char *key(char *str)
+char	*key(char *str)
 {
-	int	i;
-	char *dest;
+	int		i;
+	char	*dest;
 
 	i = 0;
 	dest = NULL;
 	while (str[i] && str[i] != '=')
 		i++;
 	if (!nmalloc((void **)&dest, i + 1))
-        return (0);
+		return (0);
 	i = 0;
-	while (str[i] &&  str[i] != '=')
+	while (str[i] && str[i] != '=')
 	{
 		dest[i] = str[i];
 		i++;
@@ -35,9 +35,9 @@ char *key(char *str)
 
 char	*value(char *str)
 {
-	int	i;
-	int	u;
-	char *dest;
+	int		i;
+	int		u;
+	char	*dest;
 
 	u = 0;
 	i = 0;
@@ -49,7 +49,7 @@ char	*value(char *str)
 	while (str[i])
 		i++;
 	if (!nmalloc((void **)&dest, i - u + 1))
-        return (0);
+		return (0);
 	i = 0;
 	while (str[u])
 	{
@@ -83,12 +83,12 @@ void	init_env_lst(t_lst *lst, char **envr, int size)
 	while (i < size)
 	{
 		new = create_env_elem(envr[i]);
-        new->prev = current;
+		new->prev = current;
 		current->next = new;
 		lst->last = current;
 		current = current->next;
 		i++;
 	}
-    lst->size = i;
+	lst->size = i;
 	//current->next = NULL;
 }

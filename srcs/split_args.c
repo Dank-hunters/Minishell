@@ -1,20 +1,20 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   split_args.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/22 18:49:21 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/23 16:54:42 by cguiot           ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   split_args.c									   :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: lrichard <lrichard@student.42lyon.f>	   +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2022/02/22 18:49:21 by lrichard		  #+#	#+#			 */
+/*   Updated: 2022/03/09 16:05:27 by cguiot           ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include <minishell.h>
 
 int	iter_through_word(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] == ' ')
@@ -35,9 +35,9 @@ int	iter_through_word(char *str)
 
 int	get_arg(t_command *cmd_lst, int *i, int *y)
 {
-	int x;
-	int j;
-	int len;
+	int	x;
+	int	j;
+	int	len;
 
 	while (cmd_lst->command[*i] && cmd_lst->command[*i] == ' ')
 		(*i)++;
@@ -91,7 +91,7 @@ int	split_args(t_command *cmd_lst, int i, int y)
 			if (!trim_spaces(&(cmd_lst->command)))
 				return (0);
 			cmd_lst = cmd_lst->next;
-			continue;
+			continue ;
 		}
 		i = 0;
 		i += iter_through_word(cmd_lst->command);

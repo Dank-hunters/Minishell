@@ -12,6 +12,7 @@ SRCS =	main.c \
 		display_utils.c \
 		str_utils.c \
 		str_utils2.c \
+		str_utils3.c \
 		ft_split.c \
 		lst_utils.c \
 		dollar.c \

@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 21:51:49 by lrichard          #+#    #+#             */
-/*   Updated: 2022/02/17 19:40:38 by lrichard         ###   ########lyon.fr   */
+/*   Updated: 2022/03/09 16:02:03 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	pipe_get_index(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != '|')
@@ -55,7 +55,7 @@ int	split_pipes(t_cmd_lst *cmd_ctrl, t_command *cmd_lst, char *line)
 			return (0);
 		if (!get_command_chunk(cmd_lst, line + i, &i))
 			return (0);
-        cmd_ctrl->size++;
+		cmd_ctrl->size++;
 		if (line[i])
 		{
 			cmd_lst->next = create_new_chunk();

@@ -25,7 +25,7 @@
 
 # define SYNTAX_ERROR 30000
 
-extern int	lastcmdretvalue;
+extern int	g_lastcmdretvalue;
 
 typedef struct s_env
 {
@@ -89,6 +89,8 @@ int		    trim_spaces(char **str);
 char        *ft_strncpy(char *dest, char *src, int len);
 char        **ft_split(char *str, char c);
 int         ft_strchr(char *str, char c);
+unsigned long long int	ft_atoi_custom(char *str);
+
 // norm_alloc_utils
 void	*nmalloc(void **var, int size);
 void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi);
@@ -108,7 +110,9 @@ int	echo(int fd, char **args);
 int	unset(t_lst *data, char *key);
 int	expor(t_lst *data, char *path);
 int	cd(t_lst *data, char *path);
-void    exiit(t_command *cmd_lst, t_env *env, char **args, int ret);
+void    exiit(t_command *cmd_lst, t_env *env, char **args, \
+	unsigned long long int ret);
+int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd);
 
 //parsing
 t_command		*create_new_chunk(void);

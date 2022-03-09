@@ -6,41 +6,20 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/03 17:02:26 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/09 16:27:27 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int lastcmdretvalue = 0;
+int	g_lastcmdretvalue = 0;
 
-int	is_closed(char *str)
+char	**rebuild_envp(t_lst *env)
 {
-    if (str == NULL)
-	return (1);
-    if (str[0] != 'e')
-	return (1);
-    if (str[1] != 'x')
-	return (1);
-    if (str[2] != 'i')
-	return (1);
-    if (str[3] != 't')
-	return (1);
-    if (str[4] != '\0')
-	return (1);
-    else
-    {
-	dprintf(1, "exit\n");
-	return (0);	
-    }
-}
-
-char **rebuild_envp(t_lst *env)
-{
-    int	 i;
-    int	 len;
-    char **envp;
-    t_env   *environment;
+    int		i;
+    int		len;
+    char	**envp;
+    t_env	*environment;
 
     if (!(nmalloc_2d(&envp, env->size + 1)))
 	return (0);
@@ -62,63 +41,73 @@ char **rebuild_envp(t_lst *env)
     return (envp);
 }
 
-int	prompt(char **envr)
+void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid)
 {
     int			i;
-    int			thefinalpid;
+    char		**path;
+
+    path = ft_split(get_value(data_env, "PATH"), ':');
+    if (!path)
+	error(cmds, data_env->first, errno, 1);
+    i = -1;
+    while (path[++i])
+	path[i] = ft_strjoin(path[i], "/", 1, 0);
+    if (!cmds->prev && !cmds->next)
+	i = exec_if_builtin(cmds, data_env, 0, 1);
+    else
+	while (cmds && execute(cmds, path, data_env, thefinalpid))
+	    cmds = cmds->next;
+    if (i == -1)
+	error(cmds, data_env->first, errno, 1);
+    i = 0;
+    while (path[i])
+	free(path[i++]);
+    free(path);
+}
+
+void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
+{
     int			status;
-    char 		*prt;
+    int			thefinalpid;
+    t_command		*cmds;
+
+    while (1)
+    {
+	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
+	if (prt && *prt)
+	{
+	    add_history(prt);
+	    if (!parse_command(cmd_ctrl, data_env, prt))
+		continue;
+	    cmds = cmd_ctrl->first;
+	    prompt_part_two(cmd_ctrl->first, data_env, &thefinalpid);
+	    if (thefinalpid != -1)
+		waitpid(thefinalpid, &status, 0);
+	    free_cmd_lst(cmd_ctrl->first);
+	}
+    }
+    free(prt);
+}
+
+void	init_shit(char **const envr)
+{
+    char		*prt;
+    int			size;
     t_lst		*data_env;
-    char	**path;
-    t_cmd_lst	cmd_ctrl;
-    t_command *cmds;
-    int size;
+    t_cmd_lst		cmd_ctrl;
 
     size = get_env_size(envr);
     prt = NULL;
     data_env = init_env_ctrl(envr);
     init_env_lst(data_env, envr, size);
-    while (1)
-    {
-	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
-	add_history(prt);
-	if (prt && *prt)
-	{
-	    if (!parse_command(&cmd_ctrl, data_env, prt))
-		continue;
-	    cmds = cmd_ctrl.first;
-	    while (cmds)
-	    {
-		path = ft_split(get_value(data_env, "PATH"), ':');
-		if (!path)
-		    return (error(cmd_ctrl.first, data_env->first, errno, 1));
-		i = -1;
-		while (path[++i])
-		    path[i] = ft_strjoin(path[i], "/", 1, 0);
-		execute(cmds, path, data_env, &thefinalpid);
-		i = 0;
-		 while (path[i])
-		    free(path[i++]);
-		free(path);
-		cmds = cmds->next;
-	    }
-	    if (thefinalpid != -1)
-		waitpid(thefinalpid, &status, 0);
-	    // if (WIFEXITED(status))
-	}
-	free_cmd_lst(cmd_ctrl.first);
-    }
-    free(prt);
-    return(0);
+    prompt(&cmd_ctrl, data_env, prt);
 }
 
-int main(int ac, char **av, char **const envr)
+int	main(int ac, char **av, char **const envr)
 {
     (void)av;
     if (ac == 1)
-    {
-	prompt(envr);
-    }
+	init_shit(envr);
     else
 	return (error(0, 0, 30001, 1));
     return (0);

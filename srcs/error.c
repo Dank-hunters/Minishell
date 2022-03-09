@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 16:37:49 by cguiot            #+#    #+#             */
-/*   Updated: 2022/02/16 17:44:15 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/09 16:18:11 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,24 @@ int	error(t_command *cmd_lst, t_env *env, int errnum, int exit)
     return (0);
 }
 
-void    exiit(t_command *cmd_lst, t_env *env, char **args, int ret)
+void    exiit(t_command *cmd_lst, t_env *env, char **args, \
+	unsigned long long int ret)
 {
-    (void)args;
+    if (args && args[1])
+    {
+	ret = ft_atoi_custom(args[1]);
+	if (ret == 9223372036854775808ULL)
+	{
+	    dprintf(2, "Minishell-4.2: exit: %s: numeric argument required\n", \
+		    args[1]);
+	    return ;
+	}
+	if (args[2])
+	{
+	    dprintf(2, "Minishell-4.2: exit: too many arguments\n");
+	    return ;
+	}
+    }
     free_cmd_lst(cmd_lst);
     free_env_lst(env);
     exit(ret);
