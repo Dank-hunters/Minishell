@@ -93,9 +93,9 @@ int	parse_command(t_cmd_lst *cmd_ctrl, t_lst *env, char *line)
 	(void)env;
 	cmd_lst = create_new_chunk();
 	cmd_ctrl->size = 1;
+	cmd_ctrl->first = cmd_lst;
 	if (!cmd_lst)
 		return ((error(cmd_lst, env->first, errno, 1)));
-	cmd_ctrl->first = cmd_lst;
 	if (!check_syntax(line))
 		return (error(cmd_lst, env->first, SYNTAX_ERROR, 0));
 	if (!split_pipes(cmd_ctrl, cmd_lst, line) || \

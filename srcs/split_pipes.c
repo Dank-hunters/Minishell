@@ -40,7 +40,7 @@ int	get_command_chunk(t_command *cmd_lst, char *line, int *i)
 		return (0);
 	*i += len;
 	while (len--)
-		(cmd_lst->command)[len] = line[len];
+		cmd_lst->command[len] = line[len];
 	return (1);
 }
 
@@ -61,8 +61,8 @@ int	split_pipes(t_cmd_lst *cmd_ctrl, t_command *cmd_lst, char *line)
 			cmd_lst->next = create_new_chunk();
 			cmd_lst->next->prev = cmd_lst;
 			cmd_lst = cmd_lst->next;
+			i++;
 		}
-		i++;
 	}
 	return (1);
 }

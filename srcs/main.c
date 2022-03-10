@@ -45,8 +45,11 @@ void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid)
 {
     int			i;
     char		**path;
+    char		*tmp;
 
-    path = ft_split(get_value(data_env, "PATH"), ':');
+    tmp = get_value(data_env, "PATH");
+    path = ft_split(tmp, ':');
+    free(tmp);
     if (!path)
 	error(cmds, data_env->first, errno, 1);
     i = -1;
@@ -54,7 +57,7 @@ void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid)
 	path[i] = ft_strjoin(path[i], "/", 1, 0);
     if (!cmds->prev && !cmds->next)
 	i = exec_if_builtin(cmds, data_env, 0, 1);
-    else
+    if (cmds->prev || cmds->next || i == 0)
 	while (cmds && execute(cmds, path, data_env, thefinalpid))
 	    cmds = cmds->next;
     if (i == -1)
@@ -69,7 +72,6 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 {
     int			status;
     int			thefinalpid;
-    t_command		*cmds;
 
     while (1)
     {
@@ -78,29 +80,31 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	{
 	    add_history(prt);
 	    if (!parse_command(cmd_ctrl, data_env, prt))
+	    {
+		free_cmd_lst(cmd_ctrl->first);
 		continue;
-	    cmds = cmd_ctrl->first;
+	    }
 	    prompt_part_two(cmd_ctrl->first, data_env, &thefinalpid);
 	    if (thefinalpid != -1)
 		waitpid(thefinalpid, &status, 0);
 	    free_cmd_lst(cmd_ctrl->first);
 	}
+	free(prt);
     }
-    free(prt);
 }
 
 void	init_shit(char **const envr)
 {
     char		*prt;
     int			size;
-    t_lst		*data_env;
+    t_lst		data_env;
     t_cmd_lst		cmd_ctrl;
 
     size = get_env_size(envr);
     prt = NULL;
     data_env = init_env_ctrl(envr);
-    init_env_lst(data_env, envr, size);
-    prompt(&cmd_ctrl, data_env, prt);
+    init_env_lst(&data_env, envr, size);
+    prompt(&cmd_ctrl, &data_env, prt);
 }
 
 int	main(int ac, char **av, char **const envr)

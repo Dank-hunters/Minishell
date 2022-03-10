@@ -34,7 +34,7 @@ static int	count_word(char *str, char c)
 		}
 		count = count + find;
 	}
-	return (count);
+	return (count + (str[0] == 0));
 }
 
 static int	get_word_length(char *str, char c, int i)

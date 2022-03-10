@@ -61,14 +61,12 @@ char	*value(char *str)
 	return (dest);
 }
 
-t_lst	*init_env_ctrl(char **envr)
+t_lst	init_env_ctrl(char **envr)
 {
-	t_lst	*lst;
+	t_lst	lst;
 
-	if (!nmalloc((void **)&lst, sizeof(t_lst)))
-		return (0);
-	lst->first = create_env_elem(envr[0]);
-	lst->size = 1;
+	lst.first = create_env_elem(envr[0]);
+	lst.size = 1;
 	return (lst);
 }
 

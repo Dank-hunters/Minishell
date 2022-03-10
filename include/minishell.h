@@ -68,7 +68,7 @@ typedef struct s_lst
 
 //env
 int		get_env_size(char **envr);
-t_lst	*init_env_ctrl(char **envr);
+t_lst	init_env_ctrl(char **envr);
 void	init_env_lst(t_lst *lst, char **envr, int size);
 t_env	*create_env_elem(char *path);
 void	aff_key(t_lst *data, char *str); // affiche la cle demande,

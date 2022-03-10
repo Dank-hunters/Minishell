@@ -44,6 +44,7 @@ char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
 {
 	int		len;
 	char	*nstr;
+	int	i;
 
 	if (!s1 || !s2)
 		return (NULL);
@@ -57,8 +58,9 @@ char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
 		nstr[len++] = *(s1++);
 	if (frees1)
 		free(s1 - len);
-	while (*s2)
-		nstr[len++] = *(s2++);
+	i = 0;
+	while (s2[i])
+		nstr[len++] = s2[i++];
 	if (frees2)
 		free(s2);
 	return (nstr);

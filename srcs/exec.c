@@ -75,9 +75,9 @@ int	free_tmp(char *tmp)
 	return (0);
 }
 
-char	*fif(char *tmp)
+int	path_set(char **p)
 {
-	return (tmp);
+    return (p[0] != 0);
 }
 
 int	exec_cmd_part_two(t_command *cmd_lst, char **path, char **envp, int i)
@@ -85,15 +85,15 @@ int	exec_cmd_part_two(t_command *cmd_lst, char **path, char **envp, int i)
 	int		joined;
 	char	*tmp;
 
-	tmp = cmd_lst->command;
+	tmp = ft_strdup(cmd_lst->command, 0);
 	while (path[i])
 	{
 		joined = 0;
-		if (!ft_strchr(cmd_lst->command, '/'))
+		if (!ft_strchr(tmp, '/'))
 		{
-			tmp = ft_strjoin(path[i], cmd_lst->command, 0, 0);
+			tmp = ft_strjoin(path[i], tmp, 0, 1);
 			if (!tmp)
-				return (free_tmp(tmp));
+				return (0);
 			joined = 1;
 		}
 		if (execve(tmp, cmd_lst->args, envp) == -1)
@@ -104,9 +104,9 @@ int	exec_cmd_part_two(t_command *cmd_lst, char **path, char **envp, int i)
 			i++;
 		}
 		else
-			return (!free_tmp(tmp));
+		    return (!free_tmp(tmp));
 	}
-	return (0);
+	return (free_tmp(tmp));
 }
 
 int	exec_cmd(t_command *cmd, t_lst *env, char **path, char **envp)

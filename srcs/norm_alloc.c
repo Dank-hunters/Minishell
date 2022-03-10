@@ -100,7 +100,7 @@ void	*dealloc(void **ptr, int starti, int endi)
 	}
 	free(*ptr);
 	*ptr = tmptr;
-	return (tmptr);
+	return (*ptr);
 }
 
 void	*nmalloc_2d(char ***var, int sizey)

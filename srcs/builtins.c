@@ -85,6 +85,7 @@ int	cd(t_lst *data, char *path)
 int	expor(t_lst *data, char *path) // reparrer args multiples
 {
 	data->last->next = create_env_elem(path);
+	data->last->next->prev = data->last;
 	data->last = data->last->next;
 	return (1);
 }

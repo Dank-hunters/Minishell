@@ -33,7 +33,7 @@ RDL = -L/usr/lib/ -lreadline
 
 INC = $(INC_DIR)/minishell.h
 
-FS = -fsanitize=address -g3
+#FS = -fsanitize=address -g3
 
 #FS  =  -Wall
 
