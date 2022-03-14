@@ -146,6 +146,7 @@ int	execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
 		return (0);
 	else if (pid && !cmd->next)
 		*thefinalpid = pid;
+	g_int[1] = 1;
 	if (cmd->next)
 		close(cmd->fd[1]);
 	if (cmd->prev)

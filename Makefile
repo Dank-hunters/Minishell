@@ -1,5 +1,5 @@
 NAME = Minishell
-.SILENT:
+#.SILENT:
 SRCS =	main.c \
 		error.c \
 		environment.c \

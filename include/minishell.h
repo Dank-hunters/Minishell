@@ -26,7 +26,7 @@
 
 # define SYNTAX_ERROR 30000
 
-extern int	g_lastcmdretvalue;
+extern int	g_int[2];
 
 typedef struct s_env
 {

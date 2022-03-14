@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	g_lastcmdretvalue = 0;
+int	g_int[2] = {0};
 
 char	**rebuild_envp(t_lst *env)
 {
@@ -88,9 +88,10 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	    if (thefinalpid != -1)
 		waitpid(thefinalpid, &status, 0);
 	    free_cmd_lst(cmd_ctrl->first);
+	    g_int[1] = 0;
 	}
 	free(prt);
-	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
+	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
     }
 }
 
@@ -110,6 +111,7 @@ void	init_shit(char **const envr)
 
 int	main(int ac, char **av, char **const envr)
 {
+    g_int[1] = 0;
     (void)av;
     if (ac == 1)
     {
