@@ -91,6 +91,7 @@ char        *ft_strncpy(char *dest, char *src, int len);
 char        **ft_split(char *str, char c);
 int         ft_strchr(char *str, char c);
 unsigned long long int	ft_atoi_custom(char *str);
+int	ft_atoi(char *nptr);
 
 // norm_alloc_utils
 void	*nmalloc(void **var, int size);
@@ -111,7 +112,7 @@ int	echo(int fd, char **args);
 int	unset(t_lst *data, char *key);
 int	expor(t_lst *data, char *path);
 int	cd(t_lst *data, char *path);
-void    exiit(t_command *cmd_lst, t_env *env, char **args, \
+int    exiit(t_command *cmd_lst, t_env *env, char **args, \
 	unsigned long long int ret);
 int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd);
 

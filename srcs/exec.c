@@ -63,9 +63,7 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	else
 		return (0);
 	if (ret == 0)
-	{
 	    return (-1);
-	}
 	return (ret);
 }
 
@@ -73,11 +71,6 @@ int	free_tmp(char *tmp)
 {
 	free(tmp);
 	return (0);
-}
-
-int	path_set(char **p)
-{
-    return (p[0] != 0);
 }
 
 int	exec_cmd_part_two(t_command *cmd_lst, char **path, char **envp, int i)
@@ -144,9 +137,8 @@ int	execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
 		error(cmd, 0, errno, 1);
 	else if (pid == -1)
 		return (0);
-	else if (pid && !cmd->next)
+	else if ((pid && ++(g_int[1])) && !cmd->next)
 		*thefinalpid = pid;
-	g_int[1] = 1;
 	if (cmd->next)
 		close(cmd->fd[1]);
 	if (cmd->prev)

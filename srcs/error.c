@@ -36,7 +36,7 @@ int	error(t_command *cmd_lst, t_env *env, int errnum, int exit)
     return (0);
 }
 
-void    exiit(t_command *cmd_lst, t_env *env, char **args, \
+int	exiit(t_command *cmd_lst, t_env *env, char **args, \
 	unsigned long long int ret)
 {
     if (args && args[1])
@@ -46,12 +46,14 @@ void    exiit(t_command *cmd_lst, t_env *env, char **args, \
 	{
 	    dprintf(2, "Minishell-4.2: exit: %s: numeric argument required\n", \
 		    args[1]);
-	    return ;
+	    free_cmd_lst(cmd_lst);
+	    free_env_lst(env);
+	    exit(255);
 	}
-	if (args[2])
+	else if (args[2])
 	{
 	    dprintf(2, "Minishell-4.2: exit: too many arguments\n");
-	    return ;
+	    return (1);
 	}
     }
     free_cmd_lst(cmd_lst);
