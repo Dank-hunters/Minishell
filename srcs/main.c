@@ -73,9 +73,9 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
     int			status;
     int			thefinalpid;
 
-    while (1)
+    prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
+    while (prt)
     {
-	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
 	if (prt && *prt)
 	{
 	    add_history(prt);
@@ -90,6 +90,7 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	    free_cmd_lst(cmd_ctrl->first);
 	}
 	free(prt);
+	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
     }
 }
 
@@ -111,7 +112,10 @@ int	main(int ac, char **av, char **const envr)
 {
     (void)av;
     if (ac == 1)
+    {
+	listen_signox();
 	init_shit(envr);
+    }
     else
 	return (error(0, 0, 30001, 1));
     return (0);

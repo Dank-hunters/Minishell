@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <signal.h>
 # include <string.h>
 # include <fcntl.h>
 # include <errno.h>
@@ -136,5 +137,9 @@ int	error(t_command *cmd_lst, t_env *env, int errnum, int exit);
 
 void	free_cmd_lst(t_command *cmd);
 void	free_env_lst(t_env *env);
+
+// siignox
+//
+int	listen_signox();
 
 #endif

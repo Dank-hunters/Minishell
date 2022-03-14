@@ -17,7 +17,8 @@ SRCS =	main.c \
 		lst_utils.c \
 		dollar.c \
 		norm_alloc.c \
-		exec.c
+		exec.c \
+		signox.c
 
 SRCS_DIR	= srcs
 
@@ -28,12 +29,12 @@ OBJS = $(SRCS:%.c=%.o)
 OBJS_P = $(addprefix $(OBJS_DIR)/, $(OBJS))
 
 INC_DIR = include
-
-RDL = -L/usr/lib/ -lreadline
+RDL =  -L/Users/$(USER)/.brew/opt/readline/lib -lreadline
+#RDL = -L/usr/lib/ -lreadline
 
 INC = $(INC_DIR)/minishell.h
 
-#FS = -fsanitize=address -g3
+FS = -fsanitize=address -g3
 
 #FS  =  -Wall
 
@@ -41,16 +42,16 @@ CFLAGS = -Wall -Wextra -Werror -I $(INC_DIR)
 
 
 CC = gcc 
-%.o : 	$(SRCS_DIR)/%.c $(INC)
-	$(CC) $(FS) $(CFLAGS) -c $< -o $@
+#$%.o : 	$(SRCS_DIR)/%.c $(INC)
+#	$(CC) $(FS) $(CFLAGS) -c $< -o $@
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c $(INC)
-			gcc $(CFLAGS) -c $< -o $@
+			gcc $(CFLAGS) -c $< -o $@ -I /Users/$(USER)/.brew/opt/readline/include
 
 all:		create_obj_dir $(NAME)
 
 $(NAME) :		$(OBJS_P)	
-			$(CC) $(FS) $(CFLAGS) $(OBJS_P) $(RDL) -o $(NAME)
+			$(CC) $(FS) $(CFLAGS) $(OBJS_P) -o $(NAME) $(RDL)
 
 create_obj_dir :
 				rm -f objs || true
