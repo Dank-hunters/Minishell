@@ -73,7 +73,7 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
     int			status;
     int			thefinalpid;
 
-    prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
+    prt = readline("Minishell-4.2$> ");
     while (prt)
     {
 	if (prt && *prt)
@@ -81,7 +81,9 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	    add_history(prt);
 	    if (!parse_command(cmd_ctrl, data_env, prt))
 	    {
+		free(prt);
 		free_cmd_lst(cmd_ctrl->first);
+		prt = readline("Minishell-4.2$> ");
 		continue;
 	    }
 	    prompt_part_two(cmd_ctrl->first, data_env, &thefinalpid);
@@ -91,7 +93,7 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	    g_int[1] = 0;
 	}
 	free(prt);
-	prt = readline("\033[36;03mMinishell-4.2 \033[33;03m$> \033[32;03m");
+    prt = readline("Minishell-4.2$> ");
     }
 }
 

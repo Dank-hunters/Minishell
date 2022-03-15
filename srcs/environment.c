@@ -31,8 +31,6 @@ void	aff_key(t_lst *data, char *str) // affiche la cle demande,
 		env = env->next;
 	if (env != NULL && !ft_strcmp(str, env->key))
 		dprintf(1, "%s\n", env->value);
-	else
-		dprintf(1, "je dois te la rajouter\n");
 }
 
 char	*get_value(t_lst *data, char *key)

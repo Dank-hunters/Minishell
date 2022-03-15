@@ -15,51 +15,44 @@
 void	infork(int sig)
 {
     if (sig == SIGINT)
+    {
 	write(1, "\n", 1);
+	g_int[0] = 130;}
+    else 
+	write(1, "Quit: 3\n", 8);
 }
 
 void	handle_signox(int sig)
 {
-    //	    dprintf(2, "%i\n", g_int[1]);
-    if (g_int[1] && sig == SIGQUIT)
+    if (g_int[1] == 0)
     {
-	;
-    }
-    else if (sig == SIGINT)
-    {
-	if (g_int[1] == 0)
+	if (sig == SIGQUIT)
 	{
 	    rl_on_new_line();
 	    rl_redisplay();
-	    write(2, "  \b\b", 4);	    
-	    ft_putstr("\n");
-	    rl_on_new_line();
-	    rl_replace_line("", 0);
-	    rl_redisplay();
+	    write(2, "  \b\b", 4);
+	    return ;
 	}
-	else
-	    infork(sig);
+	rl_on_new_line();
+	rl_redisplay();
+	write(2, "  \b\b", 4);	    
+	ft_putstr("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
     }
-
-
-    /*lse if (sig == SIGCONT)
-      {
-      dprintf(1, "CONTINUED ... BUT EXIT LOL\n");
-    //exit(0);
-    }*/
-
-
+    else
+	infork(sig);
 }
 
 int	listen_signox()
 {
     struct sigaction sga;
 
-    //	sigemptyset(&sga.sa_mask);
+    sigemptyset(&sga.sa_mask);
     sga.sa_flags = SA_RESTART;
     sga.sa_handler = &handle_signox;
     sigaction(SIGQUIT, &sga, 0);
     sigaction(SIGINT, &sga, 0);
-    //sigaction(SIGCONT, &sga, 0);
     return 0;
 }

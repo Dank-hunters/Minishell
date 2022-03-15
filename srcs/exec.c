@@ -44,17 +44,17 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	if (cmd->redir_in_fd)
 		fd = cmd->redir_in_fd;
 	if (!ft_strcmp(cmd->command, "cd"))
-		ret = cd(envv, cmd->args[1]);
+		ret = cd(cmd, envv, cmd->args[1]);
 	else if (!ft_strcmp(cmd->command, "echo"))
 		ret = echo(fd, cmd->args);
 	else if (!ft_strcmp(cmd->command, "env"))
 		ret = env(envv, 0); // revoir
 	else if (!ft_strcmp(cmd->command, "unset"))
-		ret = unset(envv, cmd->args[1]); // args multiples
+		ret = unset(envv, cmd->args);
 	else if (!ft_strcmp(cmd->command, "pwd"))
 		aff_key(envv, "PWD");
 	else if (!ft_strcmp(cmd->command, "export"))
-		ret = expor(envv, cmd->args[1]); // args multplies
+		ret = expor(envv, cmd->args); // args multplies
 	else if (!strcmp(cmd->command, "exit"))
 	{
 	    exiit(cmd, envv->first, cmd->args, 0);
