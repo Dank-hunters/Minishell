@@ -50,7 +50,7 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	else if (!ft_strcmp(cmd->command, "env"))
 		ret = env(envv, 0); // revoir
 	else if (!ft_strcmp(cmd->command, "unset"))
-		ret = unset(envv, cmd->args);
+		ret = unset(envv, cmd->args, 1);
 	else if (!ft_strcmp(cmd->command, "pwd"))
 		aff_key(envv, "PWD");
 	else if (!ft_strcmp(cmd->command, "export"))

@@ -66,6 +66,8 @@ t_env	*get_key(t_lst *data, char *key)
 	env = data->first;
 	while (env && key[i])
 	{
+	    if (key[i] == '=')
+		break;
 		if (key[i] != env->key[i])
 		{
 			env = env->next;
@@ -73,7 +75,8 @@ t_env	*get_key(t_lst *data, char *key)
 		}
 		i++;
 	}
-	if (env && (ft_strlen(key) != ft_strlen(env->key) || env->set == 0))
+	if (env && (i != ft_strlen(env->key)))
 		return (NULL);
 	return (env);
 }
+

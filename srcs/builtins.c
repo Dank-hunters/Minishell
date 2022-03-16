@@ -86,33 +86,45 @@ int	cd(t_command *cmds, t_lst *data, char *path)
 int	expor(t_lst *data, char **args) // reparrer args multiples
 {
     int	i;
-    
+
 
     i = 1;
     while (args[i])
     {
-    if (ft_strchr(args[i], '='))
-    {
-	data->last->next = create_env_elem(args[i]);
-        data->last->next->prev = data->last;
-	data->last = data->last->next;
-    }
+	if (ft_strchr(args[i], '='))
+	{
+	    unset(data, args + i - 1, 0);
+	    if ( data->last)
+	    {
+		data->last->next = create_env_elem(args[i]);
+		data->last->next->prev = data->last;
+		data->last = data->last->next;
+	    }
+	    else
+		data->last = create_env_elem(args[i]);
+	}
 	i++;
     }
     return (1);
 }
 
-int	unset(t_lst *data, char **args) // reparer args multiples
+int	unset(t_lst *data, char **args, int test) // reparer args multiples
 {
     t_env	*env;
     int	i;
-
     i = 1;
     while (args[i])
     {
+	if (ft_strchr(args[i], '=') == 1 && test == 1)
+	    return (0);
 	env = get_key(data, args[i]);
 	if (env)
+		dprintf(1, "%s", env->key);
+	if (env)
 	{
+	dprintf(1, "bite");
+	    if (env == data->last)
+		data->last = env->prev;
 	    free(env->key);
 	    free(env->value);
 	    if (env->prev)
@@ -135,11 +147,11 @@ int	env(t_lst *data, int ntm)
     {
 	while (env != NULL)
 	{
-		ft_putstr(env->key);
-		ft_putstr("=");
-		ft_putstr(env->value);
-		ft_putstr("\n");
-		env = env->next;
+	    ft_putstr(env->key);
+	    ft_putstr("=");
+	    ft_putstr(env->value);
+	    ft_putstr("\n");
+	    env = env->next;
 	}
     }
     return (1);

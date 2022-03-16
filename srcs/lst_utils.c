@@ -21,7 +21,6 @@ t_env	*create_env_elem(char *path)
 		return (0);
 	new->key = key(path);
 	new->value = value(path);
-	new->set = 1;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
