@@ -56,16 +56,16 @@ void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid)
     while (path[++i])
 	path[i] = ft_strjoin(path[i], "/", 1, 0);
     if (!cmds->prev && !cmds->next)
-	i = exec_if_builtin(cmds, data_env, 0, 1);
+	i = exec_if_builtin(cmds, data_env, 1, 1);
     if (cmds->prev || cmds->next || i == 0)
 	while (cmds && execute(cmds, path, data_env, thefinalpid))
 	    cmds = cmds->next;
-    if (i == -1)
-	error(cmds, data_env->first, errno, 1);
-    i = 0;
     while (path[i])
 	free(path[i++]);
     free(path);
+    if (i == -1)
+	error(cmds, data_env->first, errno, 1);
+    i = 0;
 }
 
 void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
@@ -121,6 +121,6 @@ int	main(int ac, char **av, char **const envr)
 	init_shit(envr);
     }
     else
-	return (error(0, 0, 30001, 1));
+	error(0, 0, 30001, 1);
     return (0);
 }

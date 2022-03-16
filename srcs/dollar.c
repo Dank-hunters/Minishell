@@ -47,7 +47,7 @@ int	buildkey(t_lst *env, char *str, char **key, int *i)
 		(*key)[j] = str[--(*i)];
 	*key = ft_strdup(get_value(env, *key), 1);
 	*i += ft_strlen(*key) - 1;
-	return (len); //fffrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeee
+	return (len);
 }
 
 int	dollar_replace(t_lst *env, char **str, char *ns, int *i)

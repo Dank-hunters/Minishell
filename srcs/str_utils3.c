@@ -1,3 +1,5 @@
+#include <minishell.h>
+
 unsigned long long int	ft_atoi_custom(char *str)
 {
     int				i;
@@ -24,4 +26,29 @@ unsigned long long int	ft_atoi_custom(char *str)
     if (str[i])
 	    return (9223372036854775808ULL);
     return (n * sign);
+}
+
+char	*ft_itoa(int n)
+{
+    int	i;
+    int	ntmp;
+    char *str;
+
+    if (!nmalloc((void **)&str, 4))
+	return (ft_strdup("", 0));
+    i = 0;
+    ntmp = n;
+    while (ntmp >= 10)
+    {
+	i++;
+	ntmp /= 10;
+    }
+    str[i + 1] = 0;
+    while (i > -1)
+    {
+	str[i] = n % 10 + 48;
+	n /= 10;
+	i--;
+    }
+    return (str);
 }

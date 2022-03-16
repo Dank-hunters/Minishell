@@ -12,31 +12,57 @@
 
 #include <minishell.h>
 
-int	error(t_command *cmd_lst, t_env *env, int errnum, int exit)
+void	errnum_two(t_command *cmds, int *exit)
+{
+    if (cmds->args && \
+	cmds->args[0] && !strcmp("cd", cmds->args[0]) && cmds->args[2])
+	dprintf(2, "Minishell-4.2: cd: too many arguments\n");
+    else if (cmds->args && \
+	    cmds->args[0] && !strcmp("cd", cmds->args[0]))
+	dprintf(2, \
+	"Minishell-4.2: cd: %s: No such file or directory\n", cmds->args[1]);
+    else if (cmds->args && cmds->args[0] && !strcmp("cd", cmds->args[0]))
+	dprintf(2, "Minishell-4.2: unset: invalid parameter name\n");
+    else if (cmds->args && cmds->args[0] && !ft_strchr(cmds->args[0], '/'))
+	dprintf(2, "Minishell-4.2: %s: command not found\n", cmds->args[0]);
+    else if (cmds->args && cmds->args[0])
+	dprintf(2, \
+	    "Minishell-4.2: %s: No such file or directory\n", cmds->args[0]);
+    else if (cmds->redir_out_path && cmds->redir_out_fd == -1)
+    {
+	dprintf(2, "%s: could not open file\n", cmds->redir_out_path);
+	*exit = 0;
+    }
+    else if (cmds->redir_in_path && cmds->redir_in_fd == -1)
+    {
+	dprintf(2, "%s: could not open file\n", cmds->redir_in_path);
+	*exit = 0;
+    }
+}
+
+int	error(t_command *cmds, t_env *env, int errnum, int exit)
 {
     if (errnum == 2)
     {
-	if (cmd_lst->args[0] && !ft_strchr(cmd_lst->args[0], '/'))
-	    dprintf(2, "Minishell-4.2: command not found: %s\n", cmd_lst->args[0]);
-	else if (cmd_lst->args[0])
-	    dprintf(2, "Minishell-4.2: %s: No such file or directory\n", cmd_lst->args[0]);
-	else if (cmd_lst->redir_out_path && !cmd_lst->redir_out_fd)
-	    dprintf(2, "%s: could not open file\n", cmd_lst->redir_out_path);
-	else if (cmd_lst->redir_in_path && !cmd_lst->redir_in_fd)
-	    dprintf(2, "%s: could not open file\n", cmd_lst->redir_in_path);
+	errnum_two(cmds, &exit);
+	if (exit)
+	    exiit(cmds, env, 0, 1);
+	return (0);
     }
     else if (errnum < 30000)
 	perror("Error");
     else if (errnum == 30000)
 	dprintf(2, "Syntax error\n");
+    else if (errnum == 30002)
+	dprintf(2, "Minishell-4.2: cd: HOME not set\n");
     else if (errnum == 30001)
 	dprintf(2, "Minishell does not take args\n");
     if (exit)
-	exiit(cmd_lst, env, 0, 1);
+	exiit(cmds, env, 0, 1);
     return (0);
 }
 
-void    exiit(t_command *cmd_lst, t_env *env, char **args, \
+void    exiit(t_command *cmds, t_env *env, char **args, \
 	unsigned long long int ret)
 {
     if (args && args[1])
@@ -54,7 +80,7 @@ void    exiit(t_command *cmd_lst, t_env *env, char **args, \
 	    return ;
 	}
     }
-    free_cmd_lst(cmd_lst);
+    free_cmd_lst(cmds);
     free_env_lst(env);
     exit(ret);
 }

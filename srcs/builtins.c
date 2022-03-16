@@ -65,21 +65,30 @@ char	*new_pwd(char *value, char *path)
     return (dest);
 }
 
-int	cd(t_command *cmds, t_lst *data, char *path)
+int	cd(t_command *cmds, t_lst *data, char **args)
 {
     t_env	*env;
     t_env	*tmp;
 
     env = data->first;
-    if (chdir(path) == -1)
+    if (!args[1])
+	chdir("~");
+    else if (args[2] || chdir(args[1]) == -1)
     {
-	error(cmds, env, errno, 0);
+	error(cmds, env, 2, 0);
 	return (1);
     }
     env = get_key(data, "OLDPWD");
     tmp = get_key(data, "PWD");
     env->value = tmp->value;
-    tmp->value = new_pwd(tmp->value, path);
+    if (args[1])
+	tmp->value = new_pwd(tmp->value, args[1]);
+    else if (get_key(data, "HOME"))
+	tmp->value = ft_strdup((get_key(data, "HOME"))->value, 0);
+    else
+	error(cmds, data->first, 30002, 0);
+    if (!tmp->value)
+	return (0);
     return (1);
 }
 

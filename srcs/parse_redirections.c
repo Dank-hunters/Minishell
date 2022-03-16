@@ -32,10 +32,11 @@ int	get_path_len(char *line)
 
 int	heredoc(t_command *cmd, char *line)
 {
+	static unsigned char name = -256;
+
 	if (cmd->redir_in_fd)
 		close(cmd->redir_in_fd);
-	unlink(".heredoc");
-	cmd->redir_in_fd = open(".heredoc", O_RDWR | O_CREAT | O_APPEND, 0666);
+	cmd->redir_in_fd = open(&(name++), O_RDWR | O_CREAT | O_APPEND, 0666);
 	if (cmd->redir_in_fd == -1)
 		return (0);
 	while (1)
@@ -46,7 +47,7 @@ int	heredoc(t_command *cmd, char *line)
 		if (!ft_strcmp(line, cmd->redir_in_path))
 		{
 			free(cmd->redir_in_path);
-			cmd->redir_in_path = ft_strdup(".heredoc", 0);
+			cmd->redir_in_path = ft_strdup(&name, 0);
 			return ((cmd->redir_in_path != 0));
 		}
 		write(cmd->redir_in_fd, line, ft_strlen(line));
@@ -136,14 +137,15 @@ int	parse_guillemets_in(t_command *cmd, t_lst *env, int i)
 	int	si;
 	int	ei;
 
-	while ((cmd->command)[++i])
+	while (cmd->command[i] == '\'' || cmd->command[i] == '"' || \
+		(cmd->command)[++i])
 	{
 		skip_quote_easy(cmd, &i);
-		if ((cmd->command)[i] == '<' && ++i)
+		if ((cmd->command)[i] == '<')
 		{
 			si = i - 1;
-			cmd->redir_in_type = 1 + (cmd->command[i] == '<');
 			i++;
+			cmd->redir_in_type = 1 + (cmd->command[i] == '<');
 			cmd->redir_in_path = get_redir_path(cmd, cmd->command, &i, 1);
 			ei = i;
 			if (!cmd->redir_in_path || !dealloc((void **)&cmd->command, si, ei))
@@ -164,14 +166,15 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 	int	si;
 	int	ei;
 
-	while ((cmd->command)[++i])
+	while (cmd->command[i] == '\'' || cmd->command[i] == '"' || \
+		(cmd->command)[++i])
 	{
 		skip_quote_easy(cmd, &i);
-		if ((cmd->command)[i] == '>' && ++i)
+		if ((cmd->command)[i] == '>')
 		{
 			si = i - 1;
-			cmd->redir_out_type = 1 + (cmd->command[i] == '>');
 			i++;
+			cmd->redir_out_type = 1 + (cmd->command[i] == '>');
 			cmd->redir_out_path = get_redir_path(cmd, cmd->command, &i, 2);
 			ei = i;
 			if (!cmd->redir_out_path || !dealloc((void **)&cmd->command, si, ei) || \

@@ -44,7 +44,7 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	if (cmd->redir_in_fd)
 		fd = cmd->redir_in_fd;
 	if (!ft_strcmp(cmd->command, "cd"))
-		ret = cd(cmd, envv, cmd->args[1]);
+		ret = cd(cmd, envv, cmd->args);
 	else if (!ft_strcmp(cmd->command, "echo"))
 		ret = echo(fd, cmd->args);
 	else if (!ft_strcmp(cmd->command, "env"))
@@ -54,7 +54,7 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	else if (!ft_strcmp(cmd->command, "pwd"))
 		aff_key(envv, "PWD");
 	else if (!ft_strcmp(cmd->command, "export"))
-		ret = expor(envv, cmd->args); // args multplies
+		ret = expor(envv, cmd->args);
 	else if (!strcmp(cmd->command, "exit"))
 	{
 	    exiit(cmd, envv->first, cmd->args, 0);
@@ -63,9 +63,7 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	else
 		return (0);
 	if (ret == 0)
-	{
 	    return (-1);
-	}
 	return (ret);
 }
 
@@ -73,11 +71,6 @@ int	free_tmp(char *tmp)
 {
 	free(tmp);
 	return (0);
-}
-
-int	path_set(char **p)
-{
-    return (p[0] != 0);
 }
 
 int	exec_cmd_part_two(t_command *cmd_lst, char **path, char **envp, int i)
@@ -121,7 +114,7 @@ int	exec_cmd(t_command *cmd, t_lst *env, char **path, char **envp)
 	if (cmd->redir_out_fd && dup2(cmd->redir_out_fd, STDOUT_FILENO) == -1 && \
 			close(cmd->redir_out_fd))
 		return (0);
-	ret = exec_if_builtin(cmd, env, 0, 1);
+	ret = exec_if_builtin(cmd, env, 1, 1);
 	if (ret == -1 || (ret == 0 && !exec_cmd_part_two(cmd, path, envp, 0)))
 	    return (0);
 	exit(0);
@@ -140,12 +133,12 @@ int	execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
 	if (!envp)
 		return (0);
 	pid = fork();
+	if (pid)
+	    *thefinalpid = pid;
 	if (!pid && !exec_cmd(cmd, env, path, envp))
 		error(cmd, 0, errno, 1);
 	else if (pid == -1)
 		return (0);
-	else if (pid && !cmd->next)
-		*thefinalpid = pid;
 	g_int[1] = 1;
 	if (cmd->next)
 		close(cmd->fd[1]);

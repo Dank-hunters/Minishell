@@ -87,8 +87,10 @@ char	*ft_strdup(char *s, int frees)
 	int		i;
 	char	*dest;
 
+	if (!s)
+		return (NULL);
 	dest = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!dest || !s)
+	if (!dest)
 		return (NULL);
 	i = -1;
 	while (s[++i])
