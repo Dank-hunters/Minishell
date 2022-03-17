@@ -6,61 +6,11 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:49:30 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/14 15:24:45 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 19:14:32 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int	get_path_len(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] && line[i] != ' ' && line[i] != '<' && line [i] != '>')
-	{
-		if (line[i] == '\'' && ++i)
-			while (line[i] != '\'')
-				i++;
-		if (line[i] == '"' && ++i)
-			while (line[i] != '"')
-				i++;
-		i++;
-	}
-	return (i);
-}
-
-int	heredoc(t_command *cmd, char *line)
-{
-	static char c = 0;
-
-	if (c == 1)
-	    c = -128;
-	c++;
-	if (cmd->redir_in_fd)
-		close(cmd->redir_in_fd);
-	cmd->redir_in_fd = open(&c, O_RDWR | O_CREAT | O_APPEND, 0666);
-	if (cmd->redir_in_fd == -1)
-		return (0);
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-			return (0);
-		dprintf(1, "LINE : |%s| PATH : |%s|", line, cmd->redir_in_path);
-		if (!ft_strcmp(line, cmd->redir_in_path))
-		{
-			free(cmd->redir_in_path);
-			cmd->redir_in_path = ft_strdup(&c, 0);
-			return ((cmd->redir_in_path != 0));
-		}
-		write(cmd->redir_in_fd, line, ft_strlen(line));
-		write(cmd->redir_in_fd, "\n", 1);
-		close(cmd->redir_in_fd);
-		cmd->redir_in_fd = open(&c, O_RDWR | O_CREAT | O_APPEND, 0666);
-	}
-	return (1);
-}
 
 char	*get_redir_path(t_command *cmd_lst, char *line, int *i, int type)
 {
@@ -74,7 +24,7 @@ char	*get_redir_path(t_command *cmd_lst, char *line, int *i, int type)
 		free(cmd_lst->redir_in_path);
 		if (!nmalloc((void **)&(cmd_lst->redir_in_path), pathlen + 1))
 			return (0);
-		ft_strncpy(cmd_lst->redir_in_path, line + *i, pathlen);	    
+		ft_strncpy(cmd_lst->redir_in_path, line + *i, pathlen);
 		*i += pathlen;
 		return (cmd_lst->redir_in_path);
 	}
@@ -86,24 +36,6 @@ char	*get_redir_path(t_command *cmd_lst, char *line, int *i, int type)
 		ft_strncpy(cmd_lst->redir_out_path, line + *i, pathlen);
 		*i += pathlen;
 		return (cmd_lst->redir_out_path);
-	}
-}
-
-void	skip_quote_easy(t_command *cmd, int *i)
-{
-	if (cmd->command[*i] == '"')
-	{
-		(*i)++;
-		while (cmd->command[*i] != '"')
-			(*i)++;
-		(*i)++;
-	}
-	if (cmd->command[*i] == '\'')
-	{	
-		(*i)++;
-		while (cmd->command[*i] != '\'')
-			(*i)++;
-		(*i)++;
 	}
 }
 
@@ -142,7 +74,7 @@ int	parse_guillemets_in(t_command *cmd, t_lst *env, int i)
 	int	ei;
 
 	while (cmd->command[i] == '\'' || cmd->command[i] == '"' || \
-		(cmd->command)[++i])
+			(cmd->command)[++i])
 	{
 		skip_quote_easy(cmd, &i);
 		if ((cmd->command)[i] == '<')
@@ -171,7 +103,7 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 	int	ei;
 
 	while (cmd->command[i] == '\'' || cmd->command[i] == '"' || \
-		(cmd->command)[++i])
+			(cmd->command)[++i])
 	{
 		skip_quote_easy(cmd, &i);
 		if ((cmd->command)[i] == '>')
@@ -182,7 +114,8 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 			cmd->redir_out_path = get_redir_path(cmd, cmd->command, &i, 2);
 			ei = i;
 			dprintf(1, "type |%d|", cmd->redir_out_type);
-			if (!cmd->redir_out_path || !dealloc((void **)&cmd->command, si, ei) || \
+			if (!cmd->redir_out_path || \
+					!dealloc((void **)&cmd->command, si, ei) || \
 					!parrse_guillemets_part_two(cmd, env, 2))
 				return (0);
 			i = si - 1;

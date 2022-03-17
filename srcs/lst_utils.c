@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 21:38:29 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/09 16:29:28 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 19:15:31 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,13 @@ void	free_cmd_lst(t_command *cmd)
 		free(cmd);
 		cmd = tmp;
 	}
+}
+
+void	unlinkk(void)
+{
+	char	c;
+
+	c = -128;
+	while (c++ < 1)
+		unlink(&c);
 }

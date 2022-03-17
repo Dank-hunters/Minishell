@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:28:02 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/09 16:31:06 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 19:30:45 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,74 +14,73 @@
 
 int	get_env_size(char **envr)
 {
-    int	i;
+	int	i;
 
-    i = 0;
-    while (envr[i])
-	i++;
-    return (i);
+	i = 0;
+	while (envr[i])
+		i++;
+	return (i);
 }
 
-void	aff_key(t_lst *data, char *str) // affiche la cle demande,
+void	aff_key(t_lst *data, char *str)
 {
-    t_env	*env;
+	t_env	*env;
 
-    env = data->first;
-    while (env != NULL && ft_strcmp(str, env->key))
-	env = env->next;
-    if (env != NULL && !ft_strcmp(str, env->key))
-	dprintf(1, "%s\n", env->value);
+	env = data->first;
+	while (env != NULL && ft_strcmp(str, env->key))
+		env = env->next;
+	if (env != NULL && !ft_strcmp(str, env->key))
+		dprintf(1, "%s\n", env->value);
 }
 
 char	*get_value(t_lst *data, char *key)
 {
-    char	*dollarquestion;
-    t_env	*env;
-    int		i;
+	char	*dollarquestion;
+	t_env	*env;
+	int		i;
 
-    if (!strcmp(key, "?"))
-	dollarquestion = ft_itoa(g_int[0]);
-    if (!strcmp(key, "?"))
-	return (dollarquestion);
-    i = 0;
-    env = data->first;
-    while (env && key[i])
-    {
-	if (key[i] != env->key[i])
+	if (!strcmp(key, "?"))
+		dollarquestion = ft_itoa(g_int[0]);
+	if (!strcmp(key, "?"))
+		return (dollarquestion);
+	i = 0;
+	env = data->first;
+	while (env && key[i])
 	{
-	    env = env->next;
-	    i = -1;
+		if (key[i] != env->key[i])
+		{
+			env = env->next;
+			i = -1;
+		}
+		i++;
 	}
-	i++;
-    }
-    if (env && ft_strlen(key) != ft_strlen(env->key))
-	return (ft_strdup("", 0));
-    if (env)
-	return (ft_strdup(env->value, 0));
-    else
-	return (ft_strdup("", 0));
+	if (env && ft_strlen(key) != ft_strlen(env->key))
+		return (ft_strdup("", 0));
+	if (env)
+		return (ft_strdup(env->value, 0));
+	else
+		return (ft_strdup("", 0));
 }
 
 t_env	*get_key(t_lst *data, char *key)
 {
-    t_env	*env;
-    int		i;
+	t_env	*env;
+	int		i;
 
-    i = 0;
-    env = data->first;
-    while (env && key[i])
-    {
-	if (key[i] == '=')
-	    break;
-	if (key[i] != env->key[i])
+	i = 0;
+	env = data->first;
+	while (env && key[i])
 	{
-	    env = env->next;
-	    i = -1;
+		if (key[i] == '=')
+			break ;
+		if (key[i] != env->key[i])
+		{
+			env = env->next;
+			i = -1;
+		}
+		i++;
 	}
-	i++;
-    }
-    if (env && (i != ft_strlen(env->key)))
-	return (NULL);
-    return (env);
+	if (env && (i != ft_strlen(env->key)))
+		return (NULL);
+	return (env);
 }
-

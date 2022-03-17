@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:02:27 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/09 16:13:40 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 18:47:41 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ int	check_syntax(char *s)
 		if (s[i] == '\'' || s[i] == '"')
 			sqs(s, &i, s[i]);
 		if (s[i] == '>')
-			if (!sss(s, &i) || \
-(s[i] == '>' && i && s[i - 1] == ' ') || s[i] == '<' || s[i] == '|' || \
-!sss(s, &i) || s[i] == '>' || s[i] == '|' || s[i] == '<')
+			if (!sss(s, &i) || (s[i] == '>' && i && s[i - 1] == ' ') \
+					|| s[i] == '<' || s[i] == '|' || \
+					!sss(s, &i) || s[i] == '>' || s[i] == '|' || s[i] == '<')
 				return (0);
 		if (s[i] == '<')
 			if (!sss(s, &i) || (s[i] == '<' && i && s[i - 1] == ' ') || \
@@ -109,21 +109,5 @@ int	parse_command(t_cmd_lst *cmd_ctrl, t_lst *env, char *line)
 		cmd_lst->args[0] = cmd_lst->command;
 		cmd_lst = cmd_lst->next;
 	}
-	/////////////////////// AFFICHAGE /////////////////////
-	int i;
-	cmd_lst = cmd_ctrl->first;
-	while (cmd_lst)
-	{
-		i = 1;
-		dprintf(1, "cmd : |%s|\n", cmd_lst->command);
-		dprintf(1, "redir out :|%s|\n",cmd_lst->redir_out_path);
-		dprintf(1, "redir in :|%s|\n",cmd_lst->redir_in_path);
-		while(cmd_lst->args[i]) 
-		{
-			dprintf(1, "args :|%s|\n", cmd_lst->args[i++]);
-		}
-		cmd_lst = cmd_lst->next;
-	}
-
 	return (1);
 }

@@ -18,7 +18,9 @@ SRCS =	main.c \
 		dollar.c \
 		norm_alloc.c \
 		exec.c \
-		signox.c
+		signox.c \
+		parse_redirection_two.c \
+		exec_part_two.c
 
 SRCS_DIR	= srcs
 

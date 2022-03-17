@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@istudent.42lyon.f>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 16:18:14 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/09 16:08:23 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 18:53:41 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,30 @@ void	*nealloc(void **ptr, int size_supp)
 
 void	*insalloc(void **ptr, void *mem_to_add, int starti, int endi)
 {
-	int		i;
-	int		slen;
-	int		chunklen;
+	int		i[3];
 	char	*tmptr;
 
 	tmptr = 0;
-	slen = ft_strlen(*(char **)ptr);
-	chunklen = ft_strlen((char *)mem_to_add);
+	i[1] = ft_strlen(*(char **)ptr);
+	i[2] = ft_strlen((char *)mem_to_add);
 	if (!mem_to_add || !nmalloc((void **)&tmptr, \
-				slen + chunklen - (endi - starti) + 2))
+				i[1] + i[2] - (endi - starti) + 2))
 		return (0);
-	i = -1;
+	i[0] = -1;
 	if (*(char **)ptr && endi - starti > 1)
 	{
-		while ((++i + 1) && (*(char **)ptr)[i] && i < starti)
-			tmptr[i] = (*(char **)ptr)[i];
+		while ((++(i[0]) + 1) && (*(char **)ptr)[i[0]] && i[0] < starti)
+			tmptr[i[0]] = (*(char **)ptr)[i[0]];
 		while (*(char *)mem_to_add)
-			tmptr[i++] = *(char *)mem_to_add++;
+			tmptr[i[0]++] = *(char *)mem_to_add++;
 		while ((*(char **)ptr)[endi])
-			tmptr[i++] = (*(char **)ptr)[endi++];
+			tmptr[i[0]++] = (*(char **)ptr)[endi++];
 		free(*ptr);
 		*ptr = tmptr;
 	}
 	else
 		free(tmptr);
-	free(mem_to_add - chunklen);
+	free(mem_to_add - i[2]);
 	return (*ptr);
 }
 
@@ -83,12 +81,9 @@ void	*dealloc(void **ptr, int starti, int endi)
 	slen = ft_strlen(*(char **)ptr);
 	if (!nmalloc((void **)&tmptr, slen - (endi - starti) + 1))
 		return (0);
-	i = 0;
-	while ((*(char **)ptr)[i] && i < starti)
-	{
+	i = -1;
+	while ((*(char **)ptr)[++i] && i < starti)
 		((char *)tmptr)[i] = (*(char **)ptr)[i];
-		i++;
-	}
 	j = i;
 	while (j < endi)
 		j++;

@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 00:30:46 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/09 16:14:17 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 18:44:41 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
 {
 	int		len;
 	char	*nstr;
-	int	i;
+	int		i;
 
 	if (!s1 || !s2)
 		return (NULL);

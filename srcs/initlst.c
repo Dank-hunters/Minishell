@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 17:57:30 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/09 16:19:46 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 19:15:54 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,4 @@ void	init_env_lst(t_lst *lst, char **envr, int size)
 		i++;
 	}
 	lst->size = i;
-	//current->next = NULL;
 }
