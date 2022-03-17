@@ -46,8 +46,8 @@ int	cd(t_command *cmds, t_lst *data, char **args)
 		chdir("~");
 	else if (args[2] || chdir(args[1]) == -1)
 	{
-		error(cmds, env, 2, 0);
-		return (1);
+		errno = 2;
+		return (-1);
 	}
 	env = get_key(data, "OLDPWD");
 	tmp = get_key(data, "PWD");
@@ -60,7 +60,7 @@ int	cd(t_command *cmds, t_lst *data, char **args)
 	else
 		error(cmds, data->first, 30002, 0);
 	if (!tmp->value)
-		return (0);
+		return (-1);
 	return (1);
 }
 
@@ -72,7 +72,9 @@ int	expor(t_command *cmd, t_lst *data, char **args)
 	while (args[i])
 	{
 		if (ft_strchr(args[i], '/'))
-			error(0, 0, 30003, 0);
+		{
+		    errno = 30003;
+		}
 		else if (ft_strchr(args[i], '='))
 		{
 			unset(cmd, data, args + i - 1, 0);

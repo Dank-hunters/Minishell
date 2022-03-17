@@ -41,6 +41,7 @@ void	handle_signox(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		g_int[0] = 130;
 	}
 	else
 		infork(sig);

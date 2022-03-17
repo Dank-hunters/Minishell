@@ -88,7 +88,6 @@ int	exec_norm(t_command *cmd, int *pid)
 
 int	execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
 {
-		//dprintf(1, "eeeeeeeeee");
 	int		i;
 	int		pid;
 	char	**envp;
