@@ -111,6 +111,5 @@ void    exiit(t_command *cmds, t_env *env, char **args, \
     }
     free_cmd_lst(cmds);
     free_env_lst(env);
-    dprintf(1, "\n\n\n%lld\n\n\n", ret);
     exit(ret);
 }

@@ -17,7 +17,8 @@ void	infork(int sig)
     if (sig == SIGINT)
     {
 	write(1, "\n", 1);
-	g_int[0] = 130;}
+	g_int[0] = 130;
+    }
     else 
 	write(1, "Quit: 3\n", 8);
 }
