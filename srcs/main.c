@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 19:15:41 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 20:49:30 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	while (prt)
 	{
 		thefinalpid = -1;
-		g_int[1] = 0;
 		unlinkk();
 		if (prt && *prt)
 		{
@@ -94,6 +93,7 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 			free_cmd_lst(cmd_ctrl->first);
 		}
 		free(prt);
+		g_int[1] = 0;
 		prt = readline("Minishell-4.2$> ");
 	}
 }

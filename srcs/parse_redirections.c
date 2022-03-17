@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:49:30 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/17 19:14:32 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 19:50:56 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 			i += cmd->redir_out_type;
 			cmd->redir_out_path = get_redir_path(cmd, cmd->command, &i, 2);
 			ei = i;
-			dprintf(1, "type |%d|", cmd->redir_out_type);
 			if (!cmd->redir_out_path || \
 					!dealloc((void **)&cmd->command, si, ei) || \
 					!parrse_guillemets_part_two(cmd, env, 2))
@@ -131,7 +130,6 @@ int	parse_redirs(t_command *cmd_lst, t_lst *env)
 		if (!parse_guillemets_in(cmd_lst, env, -1) || \
 				!parse_guillemets_out(cmd_lst, env, -1))
 			return (0);
-		dprintf(1, "FD |%d|", cmd_lst->redir_in_fd);
 		cmd_lst = cmd_lst->next;
 	}
 	return (1);

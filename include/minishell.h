@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:50 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 19:41:41 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 20:04:11 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int						get_env_size(char **envr);
 t_lst					init_env_ctrl(char **envr);
 void					init_env_lst(t_lst *lst, char **envr, int size);
 t_env					*create_env_elem(char *path);
-void					aff_key(t_lst *data, char *str);
+int						aff_key(t_lst *data, char *str);
 char					*get_value(t_lst *data, char *key);
 t_env					*get_key(t_lst *data, char *key);
 

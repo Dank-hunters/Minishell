@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:28:02 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/17 19:30:45 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 20:49:37 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	get_env_size(char **envr)
 	return (i);
 }
 
-void	aff_key(t_lst *data, char *str)
+int	aff_key(t_lst *data, char *str)
 {
 	t_env	*env;
 
@@ -31,6 +31,7 @@ void	aff_key(t_lst *data, char *str)
 		env = env->next;
 	if (env != NULL && !ft_strcmp(str, env->key))
 		dprintf(1, "%s\n", env->value);
+	return (1);
 }
 
 char	*get_value(t_lst *data, char *key)

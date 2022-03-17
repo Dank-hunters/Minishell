@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 19:24:50 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 19:27:58 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 20:49:35 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,17 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	else if (!ft_strcmp(cmd->command, "unset"))
 		ret = unset(cmd, envv, cmd->args, 1);
 	else if (!ft_strcmp(cmd->command, "pwd"))
-		aff_key(envv, "PWD");
+		ret = aff_key(envv, "PWD");
 	else if (!ft_strcmp(cmd->command, "export"))
 		ret = expor(cmd, envv, cmd->args);
-	if (!strcmp(cmd->command, "exit"))
+	else if (!strcmp(cmd->command, "exit"))
+	{
 		exiit(cmd, envv->first, cmd->args, 0);
-	if (!strcmp(cmd->command, "exit"))
 		ret = 1;
+	}
 	else
 		return (0);
 	if (ret == 0)
 		return (-1);
-	g_int[0] = 0;
 	return (ret);
 }

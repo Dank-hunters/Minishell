@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 19:06:46 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/17 19:27:56 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/17 20:49:29 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,10 @@ int	exec_cmd(t_command *cmd, t_lst *env, char **path, char **envp)
 			close(cmd->redir_out_fd))
 		return (0);
 	ret = exec_if_builtin(cmd, env, 1, 1);
-	if (ret == -1 || (ret == 0 && !exec_cmd_part_two(cmd, path, envp, 0)))
+	if (ret != -1 && ret != 0)
+		g_int[0] = 0;
+	if (ret == -1 || (ret == 0 && cmd->args[0][0] && \
+		!exec_cmd_part_two(cmd, path, envp, 0)))
 		return (0);
 	if (g_int[1])
 		exit(0);
@@ -77,12 +80,15 @@ int	exec_norm(t_command *cmd, int *pid)
 		*pid = fork();
 		if (*pid == -1)
 			return (0);
+		else if (!*pid)
+			g_int[1] = 1;
 	}
 	return (1);
 }
 
 int	execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
 {
+		//dprintf(1, "eeeeeeeeee");
 	int		i;
 	int		pid;
 	char	**envp;
