@@ -64,7 +64,8 @@ void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid, \
 	free(path);
 	if (*thefinalpid != -1)
 	{
-		waitpid(*thefinalpid, &status, 0);
+		while (wait(&status) > 0)
+		    ;
 		if (g_int[0] != 130)
 		    g_int[0] = WEXITSTATUS(status);
 	}
