@@ -55,17 +55,24 @@ void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid)
     i = -1;
     while (path[++i])
 	path[i] = ft_strjoin(path[i], "/", 1, 0);
-    if (!cmds->prev && !cmds->next)
-	i = exec_if_builtin(cmds, data_env, 1, 1);
-    if (cmds->prev || cmds->next || i == 0)
-	while (cmds && execute(cmds, path, data_env, thefinalpid))
-	    cmds = cmds->next;
+    while (cmds)
+    {
+	i = execute(cmds, path, data_env, thefinalpid);
+        cmds = cmds->next;
+    }
+    i = 0;
     while (path[i])
 	free(path[i++]);
     free(path);
-    if (i == -1)
-	error(cmds, data_env->first, errno, 1);
-    i = 0;
+}
+
+void	unlinkk()
+{
+    char c;
+
+    c = -128;
+    while (c++ < 1)
+	unlink(&c);
 }
 
 void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
@@ -76,6 +83,9 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
     prt = readline("Minishell-4.2$> ");
     while (prt)
     {
+	thefinalpid = -1;
+	g_int[1] = 0;
+	unlinkk();
 	if (prt && *prt)
 	{
 	    add_history(prt);
@@ -88,9 +98,12 @@ void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
 	    }
 	    prompt_part_two(cmd_ctrl->first, data_env, &thefinalpid);
 	    if (thefinalpid != -1)
+	    {
 		waitpid(thefinalpid, &status, 0);
+		if (g_int[0] != 130)
+		    g_int[0] = WEXITSTATUS(status);
+	    }
 	    free_cmd_lst(cmd_ctrl->first);
-	    g_int[1] = 0;
 	}
 	free(prt);
     prt = readline("Minishell-4.2$> ");

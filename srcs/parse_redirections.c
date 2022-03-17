@@ -17,7 +17,7 @@ int	get_path_len(char *line)
 	int	i;
 
 	i = 0;
-	while (line[i] && line[i] != ' ')
+	while (line[i] && line[i] != ' ' && line[i] != '<' && line [i] != '>')
 	{
 		if (line[i] == '\'' && ++i)
 			while (line[i] != '\'')
@@ -30,18 +30,18 @@ int	get_path_len(char *line)
 	return (i);
 }
 
-int	heredoc(t_command *cmd, char *line, char *name)
+int	heredoc(t_command *cmd, char *line)
 {
-	static int n = 0;
+	static char c = 0;
 
-	n++;
-	name = ft_itoa(n);
+	if (c == 1)
+	    c = -128;
+	c++;
 	if (cmd->redir_in_fd)
 		close(cmd->redir_in_fd);
-	cmd->redir_in_fd = open(name, O_RDWR | O_CREAT | O_APPEND, 0666);
+	cmd->redir_in_fd = open(&c, O_RDWR | O_CREAT | O_APPEND, 0666);
 	if (cmd->redir_in_fd == -1)
 		return (0);
-	dprintf(1, "asdf");
 	while (1)
 	{
 		line = readline("> ");
@@ -51,13 +51,13 @@ int	heredoc(t_command *cmd, char *line, char *name)
 		if (!ft_strcmp(line, cmd->redir_in_path))
 		{
 			free(cmd->redir_in_path);
-			cmd->redir_in_path = ft_strdup(name, 0);
+			cmd->redir_in_path = ft_strdup(&c, 0);
 			return ((cmd->redir_in_path != 0));
 		}
 		write(cmd->redir_in_fd, line, ft_strlen(line));
 		write(cmd->redir_in_fd, "\n", 1);
 		close(cmd->redir_in_fd);
-		cmd->redir_in_fd = open(name, O_RDWR | O_CREAT | O_APPEND, 0666);
+		cmd->redir_in_fd = open(&c, O_RDWR | O_CREAT | O_APPEND, 0666);
 	}
 	return (1);
 }
@@ -147,14 +147,14 @@ int	parse_guillemets_in(t_command *cmd, t_lst *env, int i)
 		skip_quote_easy(cmd, &i);
 		if ((cmd->command)[i] == '<')
 		{
-			si = i - 1;
+			si = i;
 			cmd->redir_in_type = 1 + (cmd->command[i + 1] == '<');
 			i += cmd->redir_in_type;
 			cmd->redir_in_path = get_redir_path(cmd, cmd->command, &i, 1);
 			ei = i;
 			if (!cmd->redir_in_path || !dealloc((void **)&cmd->command, si, ei))
 				return (0);
-			if (cmd->redir_in_type == 2 && !heredoc(cmd, 0, 0))
+			if (cmd->redir_in_type == 2 && !heredoc(cmd, 0))
 				return (0);
 			else if (cmd->redir_in_type == 1 && \
 					!parrse_guillemets_part_two(cmd, env, 1))
@@ -176,11 +176,12 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 		skip_quote_easy(cmd, &i);
 		if ((cmd->command)[i] == '>')
 		{
-			si = i - 1;
-			cmd->redir_in_type = 1 + (cmd->command[i + 1] == '<');
-			i += cmd->redir_in_type;
+			si = i;
+			cmd->redir_out_type = 1 + (cmd->command[i + 1] == '<');
+			i += cmd->redir_out_type;
 			cmd->redir_out_path = get_redir_path(cmd, cmd->command, &i, 2);
 			ei = i;
+			dprintf(1, "type |%d|", cmd->redir_out_type);
 			if (!cmd->redir_out_path || !dealloc((void **)&cmd->command, si, ei) || \
 					!parrse_guillemets_part_two(cmd, env, 2))
 				return (0);

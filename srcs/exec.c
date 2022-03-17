@@ -39,10 +39,17 @@ int	dup_des_trucs(t_command *cmd)
 	return (1);
 }
 
+int	is_builtin(t_command *cmd)
+{
+	if (!ft_strcmp(cmd->command, "cd") || !ft_strcmp(cmd->command, "echo") || !ft_strcmp(cmd->command, "env") || !ft_strcmp(cmd->command, "unset") || !ft_strcmp(cmd->command, "pwd") || !ft_strcmp(cmd->command, "export") || !strcmp(cmd->command, "exit"))
+	    return (-1);
+	return (0);
+}
+
 int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 {
-	if (cmd->redir_in_fd)
-		fd = cmd->redir_in_fd;
+	if (cmd->redir_out_fd)
+		fd = cmd->redir_out_fd;
 	if (!ft_strcmp(cmd->command, "cd"))
 		ret = cd(cmd, envv, cmd->args);
 	else if (!ft_strcmp(cmd->command, "echo"))
@@ -50,11 +57,11 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 	else if (!ft_strcmp(cmd->command, "env"))
 		ret = env(envv, 0); // revoir
 	else if (!ft_strcmp(cmd->command, "unset"))
-		ret = unset(envv, cmd->args, 1);
+		ret = unset(cmd, envv, cmd->args, 1);
 	else if (!ft_strcmp(cmd->command, "pwd"))
 		aff_key(envv, "PWD");
 	else if (!ft_strcmp(cmd->command, "export"))
-		ret = expor(envv, cmd->args);
+		ret = expor(cmd, envv, cmd->args);
 	else if (!strcmp(cmd->command, "exit"))
 	{
 	    exiit(cmd, envv->first, cmd->args, 0);
@@ -64,6 +71,8 @@ int	exec_if_builtin(t_command *cmd, t_lst *envv, int ret, int fd)
 		return (0);
 	if (ret == 0)
 	    return (-1);
+	g_int[0] = 0;
+	dprintf(1, "SETIT");
 	return (ret);
 }
 
@@ -108,16 +117,20 @@ int	exec_cmd(t_command *cmd, t_lst *env, char **path, char **envp)
 
 	if (!dup_des_trucs(cmd))
 		return (0);
-	if (cmd->redir_in_fd && dup2(cmd->redir_in_fd, STDIN_FILENO) == -1 && \
+
+	if (g_int[1] && cmd->redir_in_fd && dup2(cmd->redir_in_fd, STDIN_FILENO) == -1 && \
 			close(cmd->redir_in_fd))
 		return (0);
-	if (cmd->redir_out_fd && dup2(cmd->redir_out_fd, STDOUT_FILENO) == -1 && \
-			close(cmd->redir_out_fd))
+
+	if (g_int[1] && cmd->redir_out_fd &&
+dup2(cmd->redir_out_fd, STDOUT_FILENO) == -1 && \
+close(cmd->redir_out_fd))
 		return (0);
-	ret = exec_if_builtin(cmd, env, 1, 1);
+	    ret = exec_if_builtin(cmd, env, 1, 1);
 	if (ret == -1 || (ret == 0 && !exec_cmd_part_two(cmd, path, envp, 0)))
 	    return (0);
-	exit(0);
+	if (g_int[1])
+	    exit(0);
 	return (1);
 }
 
@@ -132,14 +145,18 @@ int	execute(t_command *cmd, char **path, t_lst *env, int *thefinalpid)
 	envp = rebuild_envp(env);
 	if (!envp)
 		return (0);
-	pid = fork();
+	pid = 0;
+	if (cmd->next || cmd->prev || !is_builtin(cmd))
+	{
+	    g_int[1] = 1;
+	    pid = fork();
+	    if (pid == -1)
+		return (0);
+	}
 	if (pid)
 	    *thefinalpid = pid;
-	if (!pid && !exec_cmd(cmd, env, path, envp))
-		error(cmd, 0, errno, 1);
-	else if (pid == -1)
-		return (0);
-	g_int[1] = 1;
+	else if (!exec_cmd(cmd, env, path, envp))
+	    error(cmd, 0, errno, g_int[1]);
 	if (cmd->next)
 		close(cmd->fd[1]);
 	if (cmd->prev)

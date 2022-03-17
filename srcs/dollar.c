@@ -35,7 +35,7 @@ int	buildkey(t_lst *env, char *str, char **key, int *i)
 	len = ++(*i) * 0;
 	while (str[*i + len] && str[*i + len] != ' ' && str[*i + len] != '\n' \
 			&& str[*i + len] != '\'' && str[*i + len] != '$' \
-			&& str[*i + len] != '"')
+			&& str[*i + len] != '"' && str[*i + len] != '/')
 		len++;
 	*i += len;
 	if (!iq && len == 0 && (str[*i] == '\'' || str[*i] == '"'))

@@ -36,35 +36,6 @@ int	echo(int fd, char **args)
     return (1);
 }
 
-char	*new_pwd(char *value, char *path)
-{
-    int		i;
-    char	*dest;
-    int		u;
-
-    u = 0;
-    i = ft_strlen(value);
-    i += ft_strlen(path);
-    if (!(nmalloc((void **)&dest, i + 2)))
-	return (0);
-    while (value[u])
-    {
-	dest[u] = value[u];
-	u++;
-    }
-    dest[u] = '/';
-    u++;
-    i = 0;
-    while (path[i])
-    {
-	dest[u] = path[i];
-	u++;
-	i++;
-	dest[u] = '\0';
-    }
-    return (dest);
-}
-
 int	cd(t_command *cmds, t_lst *data, char **args)
 {
     t_env	*env;
@@ -80,9 +51,10 @@ int	cd(t_command *cmds, t_lst *data, char **args)
     }
     env = get_key(data, "OLDPWD");
     tmp = get_key(data, "PWD");
+    free(env->value);
     env->value = tmp->value;
     if (args[1])
-	tmp->value = new_pwd(tmp->value, args[1]);
+	tmp->value = getcwd(NULL, 0);
     else if (get_key(data, "HOME"))
 	tmp->value = ft_strdup((get_key(data, "HOME"))->value, 0);
     else
@@ -92,7 +64,7 @@ int	cd(t_command *cmds, t_lst *data, char **args)
     return (1);
 }
 
-int	expor(t_lst *data, char **args) // reparrer args multiples
+int	expor(t_command *cmd, t_lst *data, char **args)
 {
     int	i;
 
@@ -100,9 +72,11 @@ int	expor(t_lst *data, char **args) // reparrer args multiples
     i = 1;
     while (args[i])
     {
-	if (ft_strchr(args[i], '='))
+	if (ft_strchr(args[i], '/'))
+	    error(0, 0, 30003, 0);
+	else if (ft_strchr(args[i], '='))
 	{
-	    unset(data, args + i - 1, 0);
+	    unset(cmd, data, args + i - 1, 0);
 	    if ( data->last)
 	    {
 		data->last->next = create_env_elem(args[i]);
@@ -117,21 +91,19 @@ int	expor(t_lst *data, char **args) // reparrer args multiples
     return (1);
 }
 
-int	unset(t_lst *data, char **args, int test) // reparer args multiples
+int	unset(t_command *cmd, t_lst *data, char **args, int test)
 {
     t_env	*env;
     int	i;
-    i = 1;
-    while (args[i])
+
+    i = 0;
+    while (args[++i])
     {
-	if (ft_strchr(args[i], '=') == 1 && test == 1)
-	    return (0);
+	if (ft_strchr(args[i], '=') == 1 && test == 1 && !error(cmd, 0, 2, 0))
+	    return (1);
 	env = get_key(data, args[i]);
 	if (env)
-		dprintf(1, "%s", env->key);
-	if (env)
 	{
-	dprintf(1, "bite");
 	    if (env == data->last)
 		data->last = env->prev;
 	    free(env->key);
@@ -142,7 +114,6 @@ int	unset(t_lst *data, char **args, int test) // reparer args multiples
 		(env->next)->prev = env->prev;
 	}
 	free(env);
-	i++;
     }
     return (1);
 }

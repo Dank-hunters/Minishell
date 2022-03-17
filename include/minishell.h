@@ -108,8 +108,8 @@ void	init_env_lst(t_lst *lst, char **envr, int size);
 
 int	env(t_lst *data, int ntm);
 int	echo(int fd, char **args);
-int	unset(t_lst *data, char **key, int test);
-int	expor(t_lst *data, char **path);
+int	unset(t_command *cmd, t_lst *data, char **key, int test);
+int	expor(t_command *cmd, t_lst *data, char **path);
 int	cd(t_command *cmds, t_lst *data, char **args);
 void    exiit(t_command *cmd_lst, t_env *env, char **args, \
 	unsigned long long int ret);
