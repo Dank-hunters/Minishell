@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 21:38:29 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/17 19:15:31 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 14:13:16 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,7 @@ void	unlinkk(void)
 
 	c = -128;
 	while (c++ < 1)
-		unlink(&c);
+	{
+		unlink(".heredoc");
+	}
 }

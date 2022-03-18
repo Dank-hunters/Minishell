@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:25:41 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 20:49:32 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 20:29:09 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,18 @@ void	infork(int sig)
 		write(1, "Quit: 3\n", 8);
 }
 
+void	norm_signox(void)
+{
+	rl_on_new_line();
+	rl_redisplay();
+	write(2, "  \b\b", 4);
+	ft_putstr("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	g_int[0] = 130;
+}
+
 void	handle_signox(int sig)
 {
 	if (g_int[1] == 0)
@@ -34,14 +46,14 @@ void	handle_signox(int sig)
 			write(2, "  \b\b", 4);
 			return ;
 		}
-		rl_on_new_line();
-		rl_redisplay();
-		write(2, "  \b\b", 4);
-		ft_putstr("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		g_int[0] = 130;
+		else if (g_int[2] == 1)
+		{
+			g_int[2] = dup(0);
+			ft_putstr("\n");
+			close(0);
+		}
+		else
+			norm_signox();
 	}
 	else
 		infork(sig);

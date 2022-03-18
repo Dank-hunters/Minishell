@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 16:37:49 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 20:49:34 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 20:30:02 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,32 +37,50 @@ void	setexitvalue(t_command *cmds, int errnum)
 		g_int[0] = 2;
 }
 
-void	errnum_two(t_command *cmds, int *exit)
+void	errnum_two_two(t_command *cmds, int *exit)
 {
-	if (cmds->args && \
-			cmds->args[0] && !strcmp("cd", cmds->args[0]) && cmds->args[2])
-		dprintf(2, "Minishell-4.2: cd: too many arguments\n");
-	else if (cmds->args && \
-			cmds->args[0] && !strcmp("cd", cmds->args[0]))
-		dprintf(2, \
-		"Minishell-4.2: cd: %s: No such file or directory\n", cmds->args[1]);
-	else if (cmds->args && cmds->args[0] && !strcmp(cmds->args[0], "unset"))
-		dprintf(2, "Minishell-4.2: unset: invalid parameter name\n");
-	else if (cmds->args && cmds->args[0] && !ft_strchr(cmds->args[0], '/'))
-		dprintf(2, "Minishell-4.2: %s: command not found\n", cmds->args[0]);
+	if (cmds->args && cmds->args[0] && !ft_strchr(cmds->args[0], '/'))
+	{
+		ft_putstr_fd(2, "Minishell-4.2: ");
+		ft_putstr_fd(2, cmds->args[0]);
+		ft_putstr_fd(2, ": command not found\n");
+	}
 	else if (cmds->args && cmds->args[0])
-		dprintf(2, \
-			"Minishell-4.2: %s: No such file or directory\n", cmds->args[0]);
+	{
+		ft_putstr_fd(2, "Minishell-4.2: ");
+		ft_putstr_fd(2, cmds->args[0]);
+		ft_putstr_fd(2, ": No such file or directory\n");
+	}
 	else if (cmds->redir_out_path && cmds->redir_out_fd == -1)
 	{
-		dprintf(2, "%s: could not open file\n", cmds->redir_out_path);
+		ft_putstr_fd(2, cmds->redir_out_path);
+		ft_putstr_fd(2, ": could not open file\n");
 		*exit = 0;
 	}
 	else if (cmds->redir_in_path && cmds->redir_in_fd == -1)
 	{
-		dprintf(2, "%s: could not open file\n", cmds->redir_in_path);
+		ft_putstr_fd(2, cmds->redir_in_path);
+		ft_putstr_fd(2, ": could not open file\n");
 		*exit = 0;
 	}
+}
+
+void	errnum_two(t_command *cmds, int *exit)
+{
+	if (cmds->args && \
+			cmds->args[0] && !strcmp("cd", cmds->args[0]) && cmds->args[2])
+		ft_putstr_fd(2, "Minishell-4.2: cd: too many arguments\n");
+	else if (cmds->args && \
+			cmds->args[0] && !strcmp("cd", cmds->args[0]))
+	{
+		ft_putstr_fd(2, "Minishell-4.2: cd: ");
+		ft_putstr_fd(2, cmds->args[1]);
+		ft_putstr_fd(2, ": No such file or directory\n");
+	}
+	else if (cmds->args && cmds->args[0] && !strcmp(cmds->args[0], "unset"))
+		ft_putstr_fd(2, "Minishell-4.2: unset: invalid parameter name\n");
+	else
+		errnum_two_two(cmds, exit);
 }
 
 int	error(t_command *cmds, t_env *env, int errnum, int exit)
@@ -99,13 +117,15 @@ void	exiit(t_command *cmds, t_env *env, char **args, \
 		ret = ft_atoi_custom(args[1]);
 		if (ret == 9223372036854775808ULL)
 		{
-			dprintf(2, "Minishell-4.2: exit: %s: numeric argument required\n", \
-					args[1]);
-			return ;
+			ft_putstr_fd(2, "Minishell-4.2: exit: ");
+			ft_putstr_fd(2, args[1]);
+			ft_putstr_fd(2, ": numeric argument required\n");
+			ret = 255;
 		}
 		if (args[2])
 		{
 			ft_putstr_fd(2, "Minishell-4.2: exit: too many arguments\n");
+			g_int[0] = 1;
 			return ;
 		}
 	}

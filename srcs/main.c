@@ -6,13 +6,13 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:02:17 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 20:49:30 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 20:29:55 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	g_int[2] = {0};
+int	g_int[4] = {0};
 
 char	**rebuild_envp(t_lst *env)
 {
@@ -65,31 +65,31 @@ void	prompt_part_two(t_command *cmds, t_lst *data_env, int *thefinalpid, \
 	if (*thefinalpid != -1)
 	{
 		while (wait(&status) > 0)
-		    ;
+			;
 		if (g_int[0] != 130)
-		    g_int[0] = WEXITSTATUS(status);
+			g_int[0] = WEXITSTATUS(status);
 	}
 }
 
-void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt)
+void	prompt(t_cmd_lst *cmd_ctrl, t_lst *data_env, char *prt, int thefinalpid)
 {
-	int			thefinalpid;
-
 	prt = readline("Minishell-4.2$> ");
 	while (prt)
 	{
-		thefinalpid = -1;
 		unlinkk();
 		if (prt && *prt)
 		{
 			add_history(prt);
-			if (!parse_command(cmd_ctrl, data_env, prt))
+			if (!parse_command(cmd_ctrl, data_env, prt) || (g_int[2] && \
+						g_int[2] > 1))
 			{
+				g_int[2] = 0;
 				free(prt);
 				free_cmd_lst(cmd_ctrl->first);
 				prt = readline("Minishell-4.2$> ");
 				continue ;
 			}
+			g_int[2] = 0;
 			prompt_part_two(cmd_ctrl->first, data_env, &thefinalpid, 0);
 			free_cmd_lst(cmd_ctrl->first);
 		}
@@ -110,7 +110,7 @@ void	init_shit(char **const envr)
 	prt = NULL;
 	data_env = init_env_ctrl(envr);
 	init_env_lst(&data_env, envr, size);
-	prompt(&cmd_ctrl, &data_env, prt);
+	prompt(&cmd_ctrl, &data_env, prt, -1);
 }
 
 int	main(int ac, char **av, char **const envr)

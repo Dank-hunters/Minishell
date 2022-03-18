@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 00:30:46 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/17 18:44:41 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 20:28:07 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,12 @@ char	*ft_strjoin(char *s1, char *s2, int frees1, int frees2)
 
 void	ft_putstr_fd(int fd, char *str)
 {
-	while (*str)
+	int	i;
+
+	i = 0;
+	while (str[i])
 	{
-		write(fd, str++, 1);
+		write(fd, &str[i], 1);
+		i++;
 	}
 }

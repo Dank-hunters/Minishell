@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:34:44 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 20:49:36 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 20:30:27 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	expor(t_command *cmd, t_lst *data, char **args)
 	{
 		if (ft_strchr(args[i], '/'))
 		{
-		    errno = 30003;
+			errno = 30003;
 		}
 		else if (ft_strchr(args[i], '='))
 		{

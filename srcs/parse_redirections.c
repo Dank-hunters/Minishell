@@ -6,7 +6,7 @@
 /*   By: lrichard <lrichard@student.42lyon.f>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:49:30 by lrichard          #+#    #+#             */
-/*   Updated: 2022/03/17 19:50:56 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 20:50:01 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,11 @@ int	parrse_guillemets_part_two(t_command *cmd, t_lst *env, int type)
 	return (1);
 }
 
-int	parse_guillemets_in(t_command *cmd, t_lst *env, int i)
+int	parse_guillemets_in(t_command *cmd, t_lst *env, int i, int si)
 {
-	int	si;
 	int	ei;
 
-	while (cmd->command[i] == '\'' || cmd->command[i] == '"' || \
-			(cmd->command)[++i])
+	while (cmd->command[i])
 	{
 		skip_quote_easy(cmd, &i);
 		if ((cmd->command)[i] == '<')
@@ -93,6 +91,8 @@ int	parse_guillemets_in(t_command *cmd, t_lst *env, int i)
 				return (0);
 			i = si - 1;
 		}
+		if (cmd->command[i] != '\'' && cmd->command[i] != '"')
+			i++;
 	}
 	return (1);
 }
@@ -102,8 +102,7 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 	int	si;
 	int	ei;
 
-	while (cmd->command[i] == '\'' || cmd->command[i] == '"' || \
-			(cmd->command)[++i])
+	while (cmd->command[i])
 	{
 		skip_quote_easy(cmd, &i);
 		if ((cmd->command)[i] == '>')
@@ -119,6 +118,8 @@ int	parse_guillemets_out(t_command *cmd, t_lst *env, int i)
 				return (0);
 			i = si - 1;
 		}
+		if (cmd->command[i] != '\'' && cmd->command[i] != '"')
+			i++;
 	}
 	return (1);
 }
@@ -127,8 +128,8 @@ int	parse_redirs(t_command *cmd_lst, t_lst *env)
 {
 	while (cmd_lst)
 	{
-		if (!parse_guillemets_in(cmd_lst, env, -1) || \
-				!parse_guillemets_out(cmd_lst, env, -1))
+		if (!parse_guillemets_in(cmd_lst, env, 0, 0) || \
+				!parse_guillemets_out(cmd_lst, env, 0))
 			return (0);
 		cmd_lst = cmd_lst->next;
 	}

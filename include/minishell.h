@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <signal.h>
 # include <string.h>
+# include <sys/ioctl.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/wait.h>
@@ -26,7 +27,7 @@
 
 # define SYNTAX_ERROR 30000
 
-extern int	g_int[2];
+extern int	g_int[4];
 
 typedef struct s_env
 {

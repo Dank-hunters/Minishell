@@ -6,7 +6,7 @@
 /*   By: cguiot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 19:01:12 by cguiot            #+#    #+#             */
-/*   Updated: 2022/03/17 19:14:34 by cguiot           ###   ########lyon.fr   */
+/*   Updated: 2022/03/18 19:42:39 by cguiot           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ int	get_path_len(char *line)
 	return (i);
 }
 
-int	norm_heredoc(t_command	*cmd, char *line, char c)
+int	norm_heredoc(t_command	*cmd, char *line)
 {
 	write(cmd->redir_in_fd, line, ft_strlen(line));
 	write(cmd->redir_in_fd, "\n", 1);
 	close(cmd->redir_in_fd);
-	cmd->redir_in_fd = open(&c, O_RDWR | O_CREAT | O_APPEND, 0666);
+	cmd->redir_in_fd = open(".heredoc", O_RDWR | O_CREAT | O_APPEND, 0666);
+	free(line);
 	if (cmd->redir_in_fd == -1)
 		return (0);
 	return (1);
@@ -61,27 +62,28 @@ int	norm_heredoc(t_command	*cmd, char *line, char c)
 
 int	heredoc(t_command *cmd, char *line)
 {
-	static char	c = 0;
-
-	c = -128 * (c == 1) + c * (c != 1);
-	c++;
+	unlink(".heredoc");
 	if (cmd->redir_in_fd)
 		close(cmd->redir_in_fd);
-	cmd->redir_in_fd = open(&c, O_RDWR | O_CREAT | O_APPEND, 0666);
+	cmd->redir_in_fd = open(".heredoc", O_RDWR | O_CREAT | O_APPEND, 0666);
 	if (cmd->redir_in_fd == -1)
 		return (0);
 	while (1)
 	{
+		g_int[2] = 1;
 		line = readline("> ");
 		if (!line)
-			return (0);
+			dup2(g_int[2], 0);
+		if (!line)
+			return (1);
 		if (!ft_strcmp(line, cmd->redir_in_path))
 		{
+			free(line);
 			free(cmd->redir_in_path);
-			cmd->redir_in_path = ft_strdup(&c, 0);
+			cmd->redir_in_path = ft_strdup(".heredoc", 0);
 			return ((cmd->redir_in_path != 0));
 		}
-		if (!norm_heredoc(cmd, line, c))
+		if (!norm_heredoc(cmd, line))
 			return (0);
 	}
 	return (1);
